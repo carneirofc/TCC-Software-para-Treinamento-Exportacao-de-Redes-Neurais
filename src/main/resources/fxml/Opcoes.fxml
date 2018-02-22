@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import java.lang.String?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.textfield.CustomTextField?>
+
+<StackPane fx:id="stackRoot" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.gui.controller.Opcoes">
+   <children>
+      <AnchorPane prefHeight="653.0" prefWidth="903.0">
+         <children>
+              <Label alignment="CENTER" layoutY="-1.0" prefHeight="34.0" prefWidth="903.0" stylesheets="@../css/Dark-Theme.css" text="Configurações" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0">
+                  <font>
+                      <Font name="System Bold" size="17.0" />
+                  </font>
+               <styleClass>
+                  <String fx:value="label-bright" />
+                  <String fx:value="menu-bar" />
+               </styleClass>
+              </Label>
+              <GridPane alignment="CENTER" hgap="20.0" layoutX="20.0" layoutY="48.0" prefHeight="387.0" prefWidth="863.0" vgap="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="48.0">
+                  <columnConstraints>
+                      <ColumnConstraints halignment="RIGHT" minWidth="100.0" />
+                      <ColumnConstraints halignment="CENTER" minWidth="100.0" />
+                  <ColumnConstraints halignment="LEFT" minWidth="100.0" />
+                  </columnConstraints>
+                  <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  </rowConstraints>
+                  <children>
+                      <Label text="Topologia Interna" />
+                      <Label text="Época Máxima" GridPane.rowIndex="1" />
+                      <Label text="Erro Desejado" GridPane.rowIndex="2" />
+                      <Label text="Taxa de Aprendizado" GridPane.rowIndex="3" />
+                      <Label text="Momentum" GridPane.rowIndex="6" />
+                      <Label GridPane.rowIndex="11" />
+                      <Label text="Faixa dos Pesos Iniciais" GridPane.rowIndex="7" />
+                      <JFXComboBox fx:id="cbFuncaoAtivacao" prefHeight="25.0" prefWidth="320.0" promptText="Função de Ativação Interna" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                      <JFXTextField fx:id="tfTopologia" prefHeight="25.0" prefWidth="320.0" promptText="ex: 3;4;5;1" GridPane.columnIndex="1" />
+                      <JFXTextField fx:id="tfEpocaMaxima" focusColor="#40a84f" prefWidth="320.0" promptText="ex: 5000" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                      <JFXTextField fx:id="tfErroDesejado" focusColor="#40a84f" prefWidth="320.0" promptText="ex: 0.0001" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                      <JFXTextField fx:id="tfTaxaAprendizado" focusColor="#40a84f" prefWidth="320.0" promptText="ex: 0.05" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                      <JFXTextField fx:id="tfMomentum" focusColor="#40a84f" prefWidth="320.0" promptText="ex: 0.01" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                      <JFXTextField fx:id="tfTermoLinear" focusColor="#40a84f" prefWidth="320.0" promptText="Termo Linear Adicional ex: 0.0001" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                      <JFXTextField fx:id="tfPesoInicial" promptText="ex:  0.5 para uma faixa de [-0.5 , +0.5]" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                  <Label fx:id="lblTopologia" text="Label" GridPane.columnIndex="2" />
+                  <Label fx:id="lblEpocaMax" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Label fx:id="lblErroDesejado" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <Label fx:id="lblTaxaAprendizado" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <Label fx:id="lblMomentum" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                  <Label fx:id="lblTermoLinear" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+                  <Label fx:id="lblPesoInicial" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                  <Label fx:id="lblFuncaoAtiv" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+                  <JFXComboBox fx:id="cbFuncAtivacaoSaida" prefHeight="25.0" prefWidth="320.0" promptText="Função de Ativação Saída" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                  <Label fx:id="lblFuncaAtivSaida" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="10" />
+                  <JFXTextField fx:id="tfTaxaDecaimento" promptText="Taxa de Decaimento ex: 0.5 out 0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Label fx:id="lbl" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                  <JFXComboBox fx:id="cbFuncaoDecaimento" prefWidth="320.0" promptText="Função de Decaimento" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <Label fx:id="lblFuncaoDecaimento" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                  <Label text="Função de Ativação" GridPane.rowIndex="8" />
+                  </children>
+              </GridPane>
+                <JFXButton fx:id="btnSalvar" layoutX="315.0" layoutY="594.0" mnemonicParsing="false" onAction="#salvar" prefWidth="150.0" text="Salvar" AnchorPane.bottomAnchor="34.0">
+               <ripplerFill>
+                  <LinearGradient endX="1.0" endY="1.0">
+                     <stops>
+                        <Stop color="BLACK" />
+                        <Stop color="WHITE" offset="1.0" />
+                     </stops>
+                  </LinearGradient>
+               </ripplerFill>
+            </JFXButton>
+                <JFXButton fx:id="btnCancelar" layoutX="506.0" layoutY="594.0" mnemonicParsing="false" onAction="#cancelar" prefWidth="150.0" text="Cancelar" AnchorPane.bottomAnchor="34.0">
+               <ripplerFill>
+                  <LinearGradient endX="1.0" endY="1.0">
+                     <stops>
+                        <Stop color="BLACK" />
+                        <Stop color="WHITE" offset="1.0" />
+                     </stops>
+                  </LinearGradient>
+               </ripplerFill>
+            </JFXButton>
+            <JFXCheckBox fx:id="cbLogTempoCamada" layoutX="223.0" layoutY="517.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="153.0" text="Log Tempo por Camada" AnchorPane.leftAnchor="223.0" />
+            <JFXCheckBox fx:id="cbLogErroEpoca" layoutX="223.0" layoutY="549.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="153.0" text="Log Erro por Época" AnchorPane.leftAnchor="223.0" />
+            <JFXCheckBox fx:id="cbDroput" disable="true" layoutX="412.0" layoutY="517.0" text="Utilizar Droput Durante o Treinamento" />
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="319.0" layoutY="448.0" prefHeight="21.0" prefWidth="320.0" text="Limites para Normalização dos Dados" textAlignment="CENTER" />
+            <Label layoutX="222.0" layoutY="480.0" text="Valor Mínimo" />
+            <Label layoutX="639.0" layoutY="480.0" text="Valor Máximo" />
+            <CustomTextField fx:id="normMin" alignment="CENTER" layoutX="323.0" layoutY="475.0" prefHeight="25.0" prefWidth="150.0" />
+            <CustomTextField fx:id="normMax" alignment="CENTER" layoutX="485.0" layoutY="475.0" prefHeight="25.0" prefWidth="150.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>

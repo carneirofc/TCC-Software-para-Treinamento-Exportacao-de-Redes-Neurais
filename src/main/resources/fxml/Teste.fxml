@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import java.lang.String?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import org.controlsfx.control.textfield.CustomTextField?>
+
+<AnchorPane prefHeight="504.0" prefWidth="745.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.gui.controller.Teste">
+   <children>
+      <Label alignment="CENTER" layoutX="82.0" layoutY="6.0" prefHeight="17.0" prefWidth="654.0" stylesheets="@../css/Dark-Theme.css" text="Teste Rede Neural" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <styleClass>
+            <String fx:value="label-bright" />
+            <String fx:value="menu-bar" />
+         </styleClass>
+      </Label>
+      <Label layoutX="14.0" layoutY="98.0" text="Erro Médio" />
+      <Label layoutX="14.0" layoutY="127.0" text="Erro Máximo" />
+      <Label layoutX="14.0" layoutY="157.0" text="Erro Mínimo" />
+      <Label layoutX="14.0" layoutY="214.0" text="Número de Amostras" />
+      <TabPane layoutX="315.0" layoutY="35.0" prefHeight="388.0" prefWidth="416.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab fx:id="tabTeste" text="Teste RNA - Erro x Amostra" />
+        </tabs>
+      </TabPane>
+      <JFXButton fx:id="btnOk" layoutX="301.0" layoutY="451.0" mnemonicParsing="false" onAction="#sair" prefHeight="33.0" prefWidth="143.0" text="Sair">
+         <ripplerFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop color="BLACK" />
+                  <Stop color="WHITE" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </ripplerFill></JFXButton>
+      <JFXButton fx:id="btnGerarConjTreino" layoutX="7.0" layoutY="359.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="288.0" text="Gerar Conjunto de Treinamento">
+         <ripplerFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop color="BLACK" />
+                  <Stop color="WHITE" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </ripplerFill></JFXButton>
+      <CustomTextField fx:id="erroInicial" layoutX="52.0" layoutY="320.0" prefWidth="80.0" />
+      <CustomTextField fx:id="erroFinal" layoutX="176.0" layoutY="320.0" prefWidth="80.0" />
+      <Label layoutX="140.0" layoutY="325.0" text="até" />
+      <Label alignment="CENTER" layoutX="10.0" layoutY="299.0" prefHeight="21.0" prefWidth="288.0" text="Faixa de Erro Para o Novo Conjunto" />
+      <Label fx:id="erroMedio" layoutX="174.0" layoutY="100.0" prefHeight="21.0" prefWidth="125.0" text="---------------------" />
+      <Label fx:id="erroMaximo" layoutX="174.0" layoutY="127.0" prefHeight="21.0" prefWidth="125.0" text="---------------------" />
+      <Label fx:id="erroMinimo" layoutX="176.0" layoutY="157.0" prefHeight="21.0" prefWidth="125.0" text="---------------------" />
+      <Label fx:id="numeroAmostras" layoutX="174.0" layoutY="214.0" prefHeight="21.0" prefWidth="125.0" text="---------------------" />
+      <JFXButton fx:id="btnTestar" layoutX="7.0" layoutY="403.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="288.0" text="Testar">
+         <ripplerFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop color="BLACK" />
+                  <Stop color="WHITE" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </ripplerFill></JFXButton>
+      <JFXButton fx:id="btnMostraGraph" contentDisplay="CENTER" layoutX="86.0" layoutY="39.0" mnemonicParsing="false" onAction="#mostrarGrafico" prefHeight="0.0">
+         <graphic>
+            <ImageView fitHeight="30.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+               <image>
+                  <Image url="@../img/grafico-on.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <ripplerFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop color="BLACK" />
+                  <Stop color="WHITE" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </ripplerFill>
+      </JFXButton>
+      <JFXButton fx:id="btnLimpaGraph" contentDisplay="CENTER" layoutX="19.0" layoutY="39.0" mnemonicParsing="false" onAction="#limparGrafico">
+         <graphic>
+            <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+               <image>
+                  <Image url="@../img/limpar-grafico.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <ripplerFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop color="BLACK" />
+                  <Stop color="WHITE" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </ripplerFill>
+      </JFXButton>
+      <JFXButton fx:id="btnCarregarDadosTeste" ellipsisString="" layoutX="10.0" layoutY="242.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="288.0" text="Dados de Teste">
+         <styleClass>
+            <String fx:value="button" />
+            <String fx:value="menu-2-color" />
+         </styleClass>
+         <ripplerFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop color="BLACK" />
+                  <Stop color="WHITE" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </ripplerFill>
+      </JFXButton>
+      <Label fx:id="lblDadosTreino" layoutX="10.0" layoutY="278.0" prefHeight="21.0" prefWidth="288.0" />
+      <Label layoutX="14.0" layoutY="185.0" prefHeight="21.0" prefWidth="143.0" text="Tempo de Teste" />
+      <Label fx:id="tempoTeste" layoutX="176.0" layoutY="185.0" prefHeight="21.0" prefWidth="125.0" text="---------------------" />
+   </children>
+</AnchorPane>

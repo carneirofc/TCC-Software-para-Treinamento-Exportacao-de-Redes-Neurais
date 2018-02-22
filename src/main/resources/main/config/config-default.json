@@ -1,0 +1,26 @@
+{
+  "topologiaOculta": [
+    4,
+    7
+  ],
+  "epocaMaxima": 5000,
+  "erroAlvo": 1.0E-4,
+  "eta": 0.0025,
+  "momentum": 0.7,
+  "termoLinear": 0.00001,
+  "faixaPesos": 0.85,
+  "funcaoAtivacao": 1,
+  "funcaoAtivacaoSaida": 3,
+  "colunasEntradaTreino": [
+    0
+  ],
+  "colunasSaidaTreino": [
+    0
+  ],
+  "colunasEntradaTeste": [
+    0
+  ],
+  "colunasSaidaTeste": [
+    0
+  ]
+}

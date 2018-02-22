@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Tcc-RedesNeurais.iml" filepath="$PROJECT_DIR$/Tcc-RedesNeurais.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Tcc-RedesNeurais_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Tcc-RedesNeurais_main.iml" group="Tcc-RedesNeurais" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Tcc-RedesNeurais_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Tcc-RedesNeurais_test.iml" group="Tcc-RedesNeurais" />
+    </modules>
+  </component>
+</project>
