@@ -7,6 +7,7 @@ import data.Operacoes;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleLongProperty;
+import javafx.concurrent.Task;
 import main.Ctrl;
 import main.Recursos;
 import main.config.ConfigGeral;
@@ -25,7 +26,7 @@ import java.io.*;
  *
  * @author Claudio
  */
-public class RnaController implements Runnable {
+public class RnaController extends Task<Void> {
 
 
     // Geração de Log
@@ -57,21 +58,6 @@ public class RnaController implements Runnable {
 
     public static void setRna(Rna rna) {
         RnaController.rna = rna;
-    }
-
-    @Override
-    public void run() {
-        try {
-            treinoSetup();
-            logSetup();
-            treinar();
-            // TODO: atualizar a interface
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            Ctrl.setRnaEmExecucao(false);
-            Ctrl.setRnaTreinada(false);
-            Platform.runLater(() -> Janela.exceptionDialog(ex));
-        }
     }
 
     /**
@@ -138,46 +124,18 @@ public class RnaController implements Runnable {
             // Atualiza a interface gráfica ...
             if (((System.nanoTime() - tDeltaMin)) > tAttNano) {
                 tDeltaMin = System.nanoTime();
-                Platform.runLater(() -> {
-
-                    ((SimpleDoubleProperty) ValoresDisplay.obsTreinoErro).set(erroEpocaTreino);
-                    ((SimpleLongProperty) ValoresDisplay.obsEpocaAtual).set(rna.getEpocaAtual());
-
-                    Principal.getGraficoLinha().addPonto(new Ponto(rna.getEpocaAtual(), erroEpocaTreino), Principal.getGraficoLinha().sTreino);
-
-                    if (Ctrl.isDadosTesteCarregados() && Ctrl.isUsarDadosTesteTreino()) {
-                        ((SimpleDoubleProperty) ValoresDisplay.obsTreinoErroTeste).set(erroEpocaTeste);
-                        Principal.getGraficoLinha().addPonto(new Ponto(rna.getEpocaAtual(), erroEpocaTeste), Principal.getGraficoLinha().sTeste);
-                    }
-                });
+                updateValue(null);
             }
 
         } while (Ctrl.isRnaEmExecucao());
-        //   Worker.finalizaAtual();
         tTreino = System.nanoTime() - tIniTreino;
-
-        Ctrl.setRnaTreinada(true);
-
-        // Atualiza a interface gráfica ...
-        Platform.runLater(() -> {
-            if (Ctrl.isUsarDadosTesteTreino()) {
-                Principal.getGraficoLinha().addPonto(new Ponto(rna.getEpocaAtual(), erroEpocaTeste), Principal.getGraficoLinha().sTeste);
-                ((SimpleDoubleProperty) ValoresDisplay.obsTreinoErroTeste).set(erroEpocaTeste);
-            }
-            Principal.getGraficoLinha().addPonto(new Ponto(rna.getEpocaAtual(), erroEpocaTreino), Principal.getGraficoLinha().sTreino);
-            ((SimpleDoubleProperty) ValoresDisplay.obsTreinoErro).set(erroEpocaTreino);
-            ((SimpleDoubleProperty) ValoresDisplay.obsTreinoTempoDeTreinamento).set(Operacoes.nanoParaNormal(tTreino));
-            ((SimpleLongProperty) ValoresDisplay.obsEpocaAtual).set(rna.getEpocaAtual());
-            Utilidade.notification("Treinamento Concluído");
-            //Janela.dialogo(,"Treinamento Concluído","Processo de treinamento concluído com sucesso.", Alert.AlertType.INFORMATION);
-        });
     }
 
     /**
      * Prepara para a rede para os treinamentos. Verifica se está tudo de
      * acordo.
      */
-    public void treinoSetup() throws Exception {
+    private void treinoSetup() throws Exception {
 
         if (!Ctrl.isDadosTreinoCarregados()) {
             throw new ExceptionPlanejada("Dados para treino não estão carregados.");
@@ -282,12 +240,6 @@ public class RnaController implements Runnable {
      * Faz um feedforward na rede. Usado para testes.
      */
     public static synchronized void netFeedForwardManual(String valorEntrada) throws Exception {
-        if (Ctrl.isRnaEmExecucao())
-            throw new ExceptionPlanejada("A rede já está em execução.");
-        if (!Ctrl.isRnaTreinada())
-            throw new ExceptionPlanejada("A rede não foi treinada.");
-        if (rna == null)
-            throw new ExceptionPlanejada("A rede não foi incializada.");
         new Thread(new FFManual(rna, valorEntrada)).start();
     }
 
@@ -296,4 +248,65 @@ public class RnaController implements Runnable {
         return rna;
     }
 
+    @Override
+    protected Void call() throws Exception {
+        treinoSetup();
+        logSetup();
+        treinar();
+        // TODO: atualizar a interface
+        return null;
+    }
+
+    @Override
+    protected void succeeded() {
+        super.succeeded();
+        Ctrl.setRnaEmExecucao(false);
+        Ctrl.setRnaTreinada(true);
+
+        // Atualiza a interface gráfica ...
+        if (Ctrl.isUsarDadosTesteTreino()) {
+            Principal.getGraficoLinha().addPonto(new Ponto(rna.getEpocaAtual(), erroEpocaTeste), Principal.getGraficoLinha().sTeste);
+            ((SimpleDoubleProperty) ValoresDisplay.obsTreinoErroTeste).set(erroEpocaTeste);
+        }
+        Principal.getGraficoLinha().addPonto(new Ponto(rna.getEpocaAtual(), erroEpocaTreino), Principal.getGraficoLinha().sTreino);
+        ((SimpleDoubleProperty) ValoresDisplay.obsTreinoErro).set(erroEpocaTreino);
+        ((SimpleDoubleProperty) ValoresDisplay.obsTreinoTempoDeTreinamento).set(Operacoes.nanoParaNormal(tTreino));
+        ((SimpleLongProperty) ValoresDisplay.obsEpocaAtual).set(rna.getEpocaAtual());
+        Utilidade.notification("Treinamento Concluído");
+        //Janela.dialogo(,"Treinamento Concluído","Processo de treinamento concluído com sucesso.", Alert.AlertType.INFORMATION);
+
+    }
+
+    @Override
+    protected void updateValue(Void value) {
+        Platform.runLater(() -> {
+            ((SimpleDoubleProperty) ValoresDisplay.obsTreinoErro).set(erroEpocaTreino);
+            ((SimpleLongProperty) ValoresDisplay.obsEpocaAtual).set(rna.getEpocaAtual());
+
+            Principal.getGraficoLinha().addPonto(new Ponto(rna.getEpocaAtual(), erroEpocaTreino), Principal.getGraficoLinha().sTreino);
+
+            if (Ctrl.isDadosTesteCarregados() && Ctrl.isUsarDadosTesteTreino()) {
+                ((SimpleDoubleProperty) ValoresDisplay.obsTreinoErroTeste).set(erroEpocaTeste);
+                Principal.getGraficoLinha().addPonto(new Ponto(rna.getEpocaAtual(), erroEpocaTeste), Principal.getGraficoLinha().sTeste);
+            }
+        });
+    }
+
+    @Override
+    protected void failed() {
+        super.failed();
+        if (getException() != null) {
+            getException().printStackTrace();
+            Janela.exceptionDialog(new Exception(getException()));
+        }
+        Ctrl.setRnaEmExecucao(false);
+        Ctrl.setRnaTreinada(false);
+    }
+
+    @Override
+    protected void cancelled() {
+        super.cancelled();
+        Ctrl.setRnaEmExecucao(false);
+        Ctrl.setRnaTreinada(false);
+    }
 }

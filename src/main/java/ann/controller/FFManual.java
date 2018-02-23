@@ -7,7 +7,6 @@ import data.Operacoes;
 import javafx.concurrent.Task;
 import main.gui.Janela;
 import main.gui.ValoresDisplay;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import main.Ctrl;
 import main.utils.Converter;
@@ -24,21 +23,25 @@ import java.util.concurrent.ExecutionException;
  */
 public class FFManual extends Task<String> {
 
-    private final Rna net;
+    private final Rna rna;
     private final String inval;
 
-    FFManual(Rna net, String inval) {
-        this.net = net;
+    FFManual(Rna rna, String inval) {
+        this.rna = rna;
         this.inval = inval;
     }
 
     @Override
     protected String call() throws Exception {
+        if (Ctrl.isRnaEmExecucao())
+            throw new ExceptionPlanejada("A rede já está em execução.");
+        if (!Ctrl.isRnaTreinada())
+            throw new ExceptionPlanejada("A rede não foi treinada.");
+        if (rna == null)
+            throw new ExceptionPlanejada("A rede não foi incializada.");
         double[] inDoubleVals = Converter.stringToDoubleVector(inval);
         if (inDoubleVals == null)
             throw new ExceptionPlanejada("Valores de entrada vazios.");
-        if (net == null)
-            throw new ExceptionPlanejada("Rede não foi inicializada.");
         if (Ctrl.isRnaEmExecucao() || !Ctrl.isRnaTreinada())
             throw new ExceptionPlanejada("A rede ainda não terminou o treinamento.");
         double[] res = new double[ConjuntoDados.dadosTreinamento.getDadosSaida()[0].length];
@@ -49,8 +52,8 @@ public class FFManual extends Task<String> {
         Operacoes.setNormMinMax(ConjuntoDados.getNormMin(), ConjuntoDados.getNormMax());
         Operacoes.normalizeVector(inDoubleVals, ConjuntoDados.getMinEntrada(), ConjuntoDados.getMaxEntrada());
 
-        net.feedForward(inDoubleVals, false);
-        net.getResultsIte(res);
+        rna.feedForward(inDoubleVals, false);
+        rna.getResultsIte(res);
 
         Operacoes.deNormalizeVector(res, ConjuntoDados.getMinSaida(), ConjuntoDados.getMaxSaida());
         return Converter.doubleVectorToString(res);

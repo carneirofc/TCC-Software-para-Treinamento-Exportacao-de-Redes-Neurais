@@ -9,10 +9,10 @@ import main.utils.ExceptionPlanejada;
  */
 public class Tarefas {
 
-    private static final RnaController RNA_CONTROLLER = new RnaController();
+     private static final RnaController RNA_CONTROLLER = new RnaController();
     private static Thread annThread = new Thread(RNA_CONTROLLER);
 
-    public static Thread getAnnThread() {
+   public static Thread getAnnThread() {
         return annThread;
     }
 
@@ -34,7 +34,8 @@ public class Tarefas {
         if (Ctrl.isRnaEmExecucao()) {
             throw new ExceptionPlanejada("A RNA já está em execução.");
         }
-        if (annThread.isAlive()) {
+        new Thread(new RnaController()).start();
+      /*  if (annThread.isAlive()) {
             annThread.interrupt();// TODO: Conferir se posso fazer isso...
             annThread.start();
         } else {
@@ -42,7 +43,7 @@ public class Tarefas {
             annThread = new Thread(RNA_CONTROLLER);
             annThread.setPriority(Thread.MAX_PRIORITY);
             annThread.start();
-        }
+        }*/
     }
 
     /**
