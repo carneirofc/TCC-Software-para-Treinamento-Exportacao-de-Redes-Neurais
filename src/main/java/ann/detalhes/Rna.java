@@ -1,12 +1,13 @@
 package ann.detalhes;
 
 import ann.controller.RnaController;
-import ann.geral.ConfiguracoesRna;
+import ann.geral.Topologia;
 import ann.geral.DecaimentoTaxaAprendizado;
-import ann.geral.FuncaoTipo;
+import ann.funcao_ativacao.FuncaoTipo;
 import data.ConjuntoDados;
 import main.Ctrl;
 import main.Recursos;
+import main.config.ConfigGeral;
 import main.utils.ExceptionPlanejada;
 
 import java.util.ArrayList;
@@ -54,12 +55,12 @@ public class Rna {
      */
     public Rna(final int[] topologia) {
         // @// TODO: 2/22/2018 arrumar o decaimento da taxa de aprendizagem
-        this(ConfiguracoesRna.getFaixaInicialPesos(),
+        this(ConfigGeral.getConfigGeralAtual().getFaixaPesos(),
                 false,
-                ConfiguracoesRna.getLINEAR_TERM(),
-                Ctrl.getFuncaoAtivacaoInterno(),
-                Ctrl.getFuncaoAtivacaoSaida(),
-                ConfiguracoesRna.getTolopogiaArray(),
+                ConfigGeral.getConfigGeralAtual().getTermoLinear(),
+                ConfigGeral.getConfigGeralAtual().getFuncaoAtivacaoInterno(),
+                ConfigGeral.getConfigGeralAtual().getFuncaoAtivacaoSaida(),
+                Topologia.getTolopogiaArray(),
                 (taxaAprendizado, param1, param2, param3) -> ((param1 % param2 == 0) ? (taxaAprendizado / 2) : (taxaAprendizado)));
         Ctrl.setRnaTreinada(false);
         inicializaLayers(topologia);
@@ -81,11 +82,11 @@ public class Rna {
     }
 
     public void configuraParametros() {
-        this.epocaMaxima = ConfiguracoesRna.getMAX_EPOCH();
-        this.erroAlvo = ConfiguracoesRna.getTARGET_ERROR();
-        this.taxaAprendizadoInicial = ConfiguracoesRna.getEta();
+        this.epocaMaxima = ConfigGeral.getConfigGeralAtual().getEpocaMaxima();
+        this.erroAlvo =  ConfigGeral.getConfigGeralAtual().getErroAlvo();
+        this.taxaAprendizadoInicial =  ConfigGeral.getConfigGeralAtual().getTaxaAprendizado();
         this.taxaAprendizado = taxaAprendizadoInicial;
-        this.momentum = ConfiguracoesRna.getMomentum();
+        this.momentum =  ConfigGeral.getConfigGeralAtual().getMomentum();
     }
 
     /**

@@ -5,13 +5,12 @@
  */
 package main;
 
-import ann.geral.DecaimentoTaxaAprendizado;
-import ann.geral.FuncaoTipo;
+import ann.funcao_ativacao.FuncaoTipo;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import main.config.ConfigGeral;
 import main.gui.ValoresDisplay;
-import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
 
 /**
  * Armazena os estados do sistema etc... Aqui ficam as variáveis de controle,
@@ -194,23 +193,22 @@ public class Ctrl {
     public static void setDirPadrao(String dirPadrao) {
         Ctrl.dirPadrao = dirPadrao;
     }
-
-    public static FuncaoTipo getFuncaoAtivacaoInterno() {
-        return ConfigGeral.getConfigGeralAtual().getFuncaoAtivacaoInterno();
-
-    }
-
-    public static void setFuncaoAtivacaoInterno(FuncaoTipo funcaoAtivacaoInterno) {
-        ConfigGeral.getConfigGeralAtual().setFuncaoAtivacao(funcaoAtivacaoInterno);
-    }
-
-    public static  FuncaoTipo getFuncaoAtivacaoSaida() {
-        return ConfigGeral.getConfigGeralAtual().getFuncaoAtivacaoSaida();
-    }
-
-    public static void setFuncaoAtivacaoSaida(FuncaoTipo funcaoAtivacaoSaida) {
-        ConfigGeral.getConfigGeralAtual().setFuncaoAtivacaoSaida(funcaoAtivacaoSaida);
-    }
+//
+//    public static FuncaoTipo getFuncaoAtivacaoInterno() {
+//        return ConfigGeral.getConfigGeralAtual().getFuncaoAtivacaoInterno();
+//    }
+//
+//    public static void setFuncaoAtivacaoInterno(FuncaoTipo funcaoAtivacaoInterno) {
+//        ConfigGeral.getConfigGeralAtual().setFuncaoAtivacao(funcaoAtivacaoInterno);
+//    }
+//
+//    public static FuncaoTipo getFuncaoAtivacaoSaida() {
+//        return ConfigGeral.getConfigGeralAtual().getFuncaoAtivacaoSaida();
+//    }
+//
+//    public static void setFuncaoAtivacaoSaida(FuncaoTipo funcaoAtivacaoSaida) {
+//        ConfigGeral.getConfigGeralAtual().setFuncaoAtivacaoSaida(funcaoAtivacaoSaida);
+//    }
 
     public static double getGuiTempoAtualizacaoSegundos() {
         return guiTempoAtualizacaoSegundos.get();

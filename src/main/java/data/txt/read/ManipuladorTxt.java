@@ -1,6 +1,5 @@
 package data.txt.read;
 
-import ann.geral.ConfiguracoesRna;
 import data.ConjuntoDados;
 import data.Operacoes;
 
@@ -109,7 +108,15 @@ public class ManipuladorTxt {
             showTxtVals(doubles, false);
         }
         Operacoes.embaralhaDados(valorSaidaTeste, valorEntradaTeste);
-        ConfiguracoesRna.setupDadosTeste();
+
+        double[][] testInMatrix = ManipuladorTxt.getValorEntradaTeste();
+        double[][] testOutMatrix = ManipuladorTxt.getValorSaidaTeste();
+
+        ConjuntoDados.dadosTeste.setDadosEntrada(testInMatrix);
+        ConjuntoDados.dadosTeste.setDadosSaida(testOutMatrix);
+
+        Ctrl.setDadosTesteCarregados(true);
+
         String finalFilesPath = filesPath;
         Platform.runLater(() -> {
             ((SimpleStringProperty) ValoresDisplay.obsDadosTesteCaminho).set(finalFilesPath);
@@ -174,7 +181,11 @@ public class ManipuladorTxt {
             showTxtVals(doubles, true);
         }
 
-        ConfiguracoesRna.setupDadosTreino();
+        ConjuntoDados.dadosTreinamento.setDadosEntrada(ManipuladorTxt.getValorEntradaTreino());
+        ConjuntoDados.dadosTreinamento.setDadosSaida(ManipuladorTxt.getValorSaidaTreino());
+
+        Ctrl.setDadosTreinoCarregados(true);
+
         String finalFilesPath = filesPath;
         Platform.runLater(() -> {
             ((SimpleStringProperty) ValoresDisplay.obsDadosTreinoCaminho).set(finalFilesPath);

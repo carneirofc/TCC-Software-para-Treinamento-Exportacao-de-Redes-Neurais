@@ -1,6 +1,7 @@
 package main.gui;
 
-import ann.geral.FuncaoTipo;
+import ann.funcao_ativacao.FuncaoTipo;
+import ann.geral.DecaimentoTaxaAprendizado;
 import javafx.beans.property.*;
 import javafx.beans.value.*;
 import javafx.collections.FXCollections;
@@ -9,6 +10,8 @@ import main.Ctrl;
 import main.config.ConfigGeral;
 
 import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class ValoresDisplay {
 
@@ -57,27 +60,21 @@ public class ValoresDisplay {
     public static ObservableBooleanValue obsDadoTesteDisable = new SimpleBooleanProperty(true);
     public static ObservableBooleanValue obsMostrarTexto = Ctrl.guiMostrarTextoProperty();
     public static ObservableBooleanValue obsMostrarGrafico = Ctrl.guiMostrarGraficoProperty();
-    public static ObservableList<String> obsFuncaoAtivacaoPossiveis = FXCollections.observableArrayList();
-    public static ObservableList<String> obsFuncaoDecaimentoPosssiveis = FXCollections.observableArrayList();
+    public static ObservableList<FuncaoTipo> obsFuncaoAtivacaoPossiveis = FXCollections.observableArrayList();
+    public static ObservableList<DecaimentoTaxaAprendizado> obsFuncaoDecaimentoPosssiveis = FXCollections.observableArrayList();
 
-    public static void atualizaFuncaoAtivacao(String s, boolean interna) {
-        if (s == null) {
-            return;
-        }
+    public static void atualizaFuncaoAtivacao(FuncaoTipo funcaoTipo, boolean interna) {
+        if (funcaoTipo == null) {return;}
         if (obsFuncaoAtivacaoPossiveis.isEmpty()) {
-            for (FuncaoTipo funcaoTipo : FuncaoTipo.values()) {
-                obsFuncaoAtivacaoPossiveis.add(funcaoTipo.getNomeFuncao());
-            }
+            obsFuncaoAtivacaoPossiveis.addAll(Arrays.asList(FuncaoTipo.values()));
         }
 
-        String[] res = s.split(":");
         if (interna) {
-            ConfigGeral.getConfigGeralAtual().setFuncaoAtivacao(FuncaoTipo.getPorCod(Integer.parseInt((res[0]).trim())));
-            ((SimpleStringProperty) ValoresDisplay.obsFuncaoAtivacaoInternaAtual).set((res[1]).trim());
+            ConfigGeral.getConfigGeralAtual().setFuncaoAtivacao(funcaoTipo);
+            ((SimpleStringProperty) ValoresDisplay.obsFuncaoAtivacaoInternaAtual).set(funcaoTipo.getStringFuncao(ConfigGeral.getConfigGeralAtual().getTermoLinear()));
         } else {
-            ConfigGeral.getConfigGeralAtual().setFuncaoAtivacaoSaida(FuncaoTipo.getPorCod(Integer.parseInt((res[0]).trim())));
-            ;
-            ((SimpleStringProperty) ValoresDisplay.obsFuncaoAtivacaoSaidaAtual).set((res[1]).trim());
+            ConfigGeral.getConfigGeralAtual().setFuncaoAtivacaoSaida(funcaoTipo);
+            ((SimpleStringProperty) ValoresDisplay.obsFuncaoAtivacaoSaidaAtual).set(funcaoTipo.getStringFuncao(ConfigGeral.getConfigGeralAtual().getTermoLinear()));
         }
     }
 

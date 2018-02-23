@@ -2,7 +2,6 @@ package main.config;
 
 
 import ann.controller.RnaController;
-import ann.geral.ConfiguracoesRna;
 import com.google.gson.Gson;
 import data.ConjuntoDados;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -39,26 +38,6 @@ public class ConfigGeral {
 
     public static void setConfigGeralAtual() {
         atualizaInterface();
-        configuracoesRna();
-        Ctrl.setPropertiesConfigCarregadas(true);
-    }
-
-    public static ConfigGeralDTO getConfigGeralAtual() {
-        return configGeralAtual;
-    }
-
-    public static void configuracoesRna() {
-        ConfiguracoesRna.setEta(configGeralAtual.getEta());
-        ConfiguracoesRna.setMomentum(configGeralAtual.getMomentum());
-        ConfiguracoesRna.setMAX_EPOCH(configGeralAtual.getEpocaMaxima());
-        ConfiguracoesRna.setTARGET_ERROR(configGeralAtual.getErroAlvo());
-        ConfiguracoesRna.setLINEAR_TERM(configGeralAtual.getTermoLinear());
-        ConfiguracoesRna.setHiddenTopology(configGeralAtual.getTopologiaOculta());
-        ConfiguracoesRna.setFaixaInicialPesos(configGeralAtual.getFaixaPesos());
-
-        Ctrl.setFuncaoAtivacaoInterno(configGeralAtual.getFuncaoAtivacaoInterno());
-        Ctrl.setFuncaoAtivacaoSaida(configGeralAtual.getFuncaoAtivacaoSaida());
-
         if (configGeralAtual.getRnaAtual() != null) {
             Ctrl.setRnaTreinada(true);
 
@@ -74,7 +53,11 @@ public class ConfigGeral {
 
         System.out.println(configGeralAtual.toString());
         System.out.println();
-        System.out.println();
+        Ctrl.setPropertiesConfigCarregadas(true);
+    }
+
+    public static ConfigGeralDTO getConfigGeralAtual() {
+        return configGeralAtual;
     }
 
     public static void atualizaInterface() {
@@ -83,12 +66,12 @@ public class ConfigGeral {
                 Platform.runLater(() -> {
                     ((SimpleDoubleProperty) ValoresDisplay.obsFaixaPesoInicial).set(configGeralAtual.getFaixaPesos());
                     ((SimpleLongProperty) ValoresDisplay.obsEpocaMaxima).set(configGeralAtual.getEpocaMaxima());
-                    ((SimpleDoubleProperty) ValoresDisplay.obsTaxaAprendizado).set(configGeralAtual.getEta());
+                    ((SimpleDoubleProperty) ValoresDisplay.obsTaxaAprendizado).set(configGeralAtual.getTaxaAprendizado());
                     ((SimpleDoubleProperty) ValoresDisplay.obsErroDesejado).set(configGeralAtual.getErroAlvo());
                     ((SimpleDoubleProperty) ValoresDisplay.obsMomentum).set((configGeralAtual.getMomentum()));
                     ((SimpleDoubleProperty) ValoresDisplay.obsTermoLinear).set(configGeralAtual.getTermoLinear());
-                    ValoresDisplay.atualizaFuncaoAtivacao(Ctrl.getFuncaoAtivacaoInterno().getNomeFuncao(), true);
-                    ValoresDisplay.atualizaFuncaoAtivacao(Ctrl.getFuncaoAtivacaoSaida().getNomeFuncao(), false);
+                    ValoresDisplay.atualizaFuncaoAtivacao(configGeralAtual.getFuncaoAtivacaoInterno(), true);
+                    ValoresDisplay.atualizaFuncaoAtivacao(configGeralAtual.getFuncaoAtivacaoSaida(), false);
                 });
             } catch (Exception e) {
                 e.printStackTrace();

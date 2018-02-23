@@ -1,6 +1,6 @@
 package main;
 
-import ann.geral.FuncaoTipo;
+import ann.funcao_ativacao.FuncaoTipo;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

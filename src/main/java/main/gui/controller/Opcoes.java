@@ -1,6 +1,8 @@
 package main.gui.controller;
 
 import ann.controller.RnaController;
+import ann.funcao_ativacao.FuncaoTipo;
+import ann.funcao_ativacao.FuncaoTipoStringConverter;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
@@ -8,6 +10,7 @@ import com.jfoenix.controls.JFXTextField;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.StackPane;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 import main.config.ConfigGeral;
 import main.gui.Janela;
@@ -42,7 +45,9 @@ public class Opcoes implements Initializable {
     @FXML
     private JFXCheckBox cbDroput;
     @FXML
-    private JFXComboBox<String> cbFuncAtivacaoSaida;
+    private JFXComboBox<FuncaoTipo> cbFuncAtivacaoSaida;
+    @FXML
+    private JFXComboBox<FuncaoTipo> cbFuncaoAtivacao;
     @FXML
     private Label lblFuncaAtivSaida;
     @FXML
@@ -53,8 +58,6 @@ public class Opcoes implements Initializable {
     private StackPane stackRoot;
     @FXML
     private JFXCheckBox cbLogErroEpoca;
-    @FXML
-    private JFXComboBox<String> cbFuncaoAtivacao;
     @FXML
     private TextField tfTopologia;
     @FXML
@@ -132,7 +135,7 @@ public class Opcoes implements Initializable {
                 ConfigGeral.getConfigGeralAtual().setErroAlvo(ValoresDisplay.NUMBER_FORMAT_NOTACAO_CIENTIFICA.parse(tfErroDesejado.getText()).doubleValue());
             }
             if (!tfTaxaAprendizado.getText().isEmpty()) {
-                ConfigGeral.getConfigGeralAtual().setEta(ValoresDisplay.NUMBER_FORMAT_NOTACAO_CIENTIFICA.parse(tfTaxaAprendizado.getText()).doubleValue());
+                ConfigGeral.getConfigGeralAtual().setTaxaAprendizado(ValoresDisplay.NUMBER_FORMAT_NOTACAO_CIENTIFICA.parse(tfTaxaAprendizado.getText()).doubleValue());
             }
             if (!tfMomentum.getText().isEmpty()) {
                 ConfigGeral.getConfigGeralAtual().setMomentum(ValoresDisplay.NUMBER_FORMAT_NOTACAO_CIENTIFICA.parse(tfMomentum.getText()).doubleValue());
@@ -171,8 +174,31 @@ public class Opcoes implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Callback<ListView<FuncaoTipo>, ListCell<FuncaoTipo>> cellFactoryFuncaoTipo = new Callback<>() {
+            @Override
+            public ListCell<FuncaoTipo> call(ListView<FuncaoTipo> param) {
+                return new ListCell<>() {
+                    @Override
+                    protected void updateItem(FuncaoTipo item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null) {
+                            setText(null);
+                        } else {
+                            setText(item.getStringFuncao(ConfigGeral.getConfigGeralAtual().getTermoLinear()));
+                        }
+                    }
+                };
+            }
+        };
+        //cbFuncaoAtivacao.setCellFactory(cellFactoryFuncaoTipo);
+        //cbFuncAtivacaoSaida.setCellFactory(cellFactoryFuncaoTipo);
+        cbFuncaoAtivacao.setConverter(new FuncaoTipoStringConverter());
+        cbFuncAtivacaoSaida.setConverter(new FuncaoTipoStringConverter());
 
+        cbFuncaoAtivacao.getSelectionModel().selectFirst();
         cbFuncaoAtivacao.setItems(ValoresDisplay.obsFuncaoAtivacaoPossiveis);
+
+        cbFuncAtivacaoSaida.getSelectionModel().selectFirst();
         cbFuncAtivacaoSaida.setItems(ValoresDisplay.obsFuncaoAtivacaoPossiveis);
         //  cbFuncaoDecaimento.setItems();
 

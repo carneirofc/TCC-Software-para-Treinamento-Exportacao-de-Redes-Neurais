@@ -1,6 +1,6 @@
 package data.properties.read;
 
-import ann.geral.ConfiguracoesRna;
+import ann.geral.Topologia;
 import data.ConjuntoDados;
 
 import java.io.File;
@@ -41,7 +41,7 @@ public class ManipuladorProperties {
 
       //  DadosRna.setColunasEntradaQtd(DadosRna.getColunasEntrada().size());
        // DadosRna.setColunasSaidaQtd(DadosRna.getColunasSaida().size());
-        ConfiguracoesRna.setHiddenTopology();
+        Topologia.setHiddenTopology();
     }
 
     /**

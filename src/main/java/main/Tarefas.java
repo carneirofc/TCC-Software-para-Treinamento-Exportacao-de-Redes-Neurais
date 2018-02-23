@@ -9,9 +9,9 @@ import main.utils.ExceptionPlanejada;
  */
 public class Tarefas {
 
-     private static final RnaController RNA_CONTROLLER = new RnaController();
-    private static Thread annThread = new Thread(RNA_CONTROLLER);
-
+   //  private static final RnaController RNA_CONTROLLER = new RnaController();
+    //private static Thread annThread = new Thread(RNA_CONTROLLER);
+/*
    public static Thread getAnnThread() {
         return annThread;
     }
@@ -23,7 +23,7 @@ public class Tarefas {
     static {
       //  annThread.setPriority(Thread.MAX_PRIORITY);
     }
-
+*/
     public static void iniciarTreino() throws ExceptionPlanejada {
         if (!Ctrl.isPropertiesDadosCarregados()) {
             throw new ExceptionPlanejada("Arquivo de properties ainda não foi carregado.");

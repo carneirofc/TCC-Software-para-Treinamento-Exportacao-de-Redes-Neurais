@@ -1,7 +1,7 @@
 package ann.controller;
 
 import ann.detalhes.Rna;
-import ann.geral.ConfiguracoesRna;
+import ann.geral.Topologia;
 import data.ConjuntoDados;
 import data.Operacoes;
 import javafx.application.Platform;
@@ -100,12 +100,12 @@ public class RnaController extends Task<Void> {
                 }
                 erroEpocaTeste = rna.getErroEpoca();
                 // Critério de parada
-                if ((rna.getEpocaAtual() > ConfiguracoesRna.getMAX_EPOCH()) || (erroEpocaTeste < ConfiguracoesRna.getTARGET_ERROR())) {
+                if ((rna.getEpocaAtual() > rna.getEpocaMaxima()) || (erroEpocaTeste < rna.getErroAlvo())) {
                     Ctrl.setRnaEmExecucao(false);
                 }
             } else {// Sem usar os dados de teste
                 // Critério de parada
-                if ((rna.getEpocaAtual() > ConfiguracoesRna.getMAX_EPOCH()) || (erroEpocaTreino < ConfiguracoesRna.getTARGET_ERROR())) {
+                if ((rna.getEpocaAtual() > rna.getEpocaMaxima()) || (erroEpocaTeste < rna.getErroAlvo())) {
                     Ctrl.setRnaEmExecucao(false);
                 }
             }
@@ -144,12 +144,12 @@ public class RnaController extends Task<Void> {
             throw new ExceptionPlanejada("As configurações básicas da RNA não foram carregadas.");
         }
 
-        ConfiguracoesRna.configTolopogia();
+        Topologia.configTolopogia();
         Ctrl.setRnaEmExecucao(true);
 
         //TODO: Aqui estava atribuindo os valores do usuário para a classe que gerencia tais informações de verdade. ... Implementar isso de uma maneira mais refinada chamanado uma função no momento de salvar estes dados...
         if (ConfigGeral.getConfigGeralAtual().getRnaAtual() == null) {
-            ConfigGeral.getConfigGeralAtual().setRnaAtual(new Rna(ConfiguracoesRna.getTolopogiaArray()));
+            ConfigGeral.getConfigGeralAtual().setRnaAtual(new Rna(Topologia.getTolopogiaArray()));
             Operacoes.findMinMaxVals(
                     ConjuntoDados.dadosTreinamento.getDadosSaida(),
                     ConjuntoDados.dadosTreinamento.getDadosEntrada(),
@@ -185,10 +185,10 @@ public class RnaController extends Task<Void> {
             if (entradas == null || saidasDesejadas == null) {
                 throw new ExceptionPlanejada("Erro com os dados carregados, uma das linhas está vazia...");
             }
-            if (entradas.length != (ConfiguracoesRna.getTolopogiaArray()[0])) {
+            if (entradas.length != (Topologia.getTolopogiaArray()[0])) {
                 throw new ExceptionPlanejada("Erro com os dados carregados, o número de dados de entrada difere do número esperado.");
             }
-            if (saidasDesejadas.length != (ConfiguracoesRna.getTolopogiaArray()[ConfiguracoesRna.getTolopogiaArray().length - 1])) {
+            if (saidasDesejadas.length != (Topologia.getTolopogiaArray()[Topologia.getTolopogiaArray().length - 1])) {
                 throw new ExceptionPlanejada("Erro com os dados carregados, o número de dados de saída difere do número esperado.");
             }
             if ((rna.getUltimaCamada().getSizeListNeuronios() - 1) != saidasDesejadas.length) {
@@ -209,11 +209,11 @@ public class RnaController extends Task<Void> {
             logTempoCamada = File.createTempFile("rna-log-tempo", "data");
             logTempoCamada.deleteOnExit();
             dosLogTempo = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(logTempoCamada)));
-            for (int i = 0; i < ConfiguracoesRna.getTolopogiaArray().length; i++) {
+            for (int i = 0; i < Topologia.getTolopogiaArray().length; i++) {
                 dosLogTempo.write(("ff-c" + i + "nanos").getBytes(Recursos.CHARSET_PADRAO));
                 dosLogTempo.write(",".getBytes(Recursos.CHARSET_PADRAO));
             }
-            for (int i = ConfiguracoesRna.getTolopogiaArray().length - 1; i > 0; i--) {
+            for (int i = Topologia.getTolopogiaArray().length - 1; i > 0; i--) {
                 dosLogTempo.write(("bp-c" + i + "nanos").getBytes(Recursos.CHARSET_PADRAO));
                 if (i != 1)
                     dosLogTempo.write(",".getBytes(Recursos.CHARSET_PADRAO));
@@ -273,7 +273,6 @@ public class RnaController extends Task<Void> {
         ((SimpleDoubleProperty) ValoresDisplay.obsTreinoTempoDeTreinamento).set(Operacoes.nanoParaNormal(tTreino));
         ((SimpleLongProperty) ValoresDisplay.obsEpocaAtual).set(rna.getEpocaAtual());
         Utilidade.notification("Treinamento Concluído");
-        //Janela.dialogo(,"Treinamento Concluído","Processo de treinamento concluído com sucesso.", Alert.AlertType.INFORMATION);
 
     }
 

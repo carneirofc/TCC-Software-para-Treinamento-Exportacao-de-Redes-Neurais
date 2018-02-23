@@ -191,6 +191,6 @@ public class ConjuntoDados {
 //            System.out.println();
 //        }
 
-        System.out.printf("Dados Normalizados Min=" + normMin + "Max=" + normMax + " Entrada/Saida" + this.getNeuroniosEntradaQtd() + " " + this.getNeuroniosSaidaQtd());
+        System.out.println("Dados Normalizados Min=" + normMin + "Max=" + normMax + " Entrada/Saida" + this.getNeuroniosEntradaQtd() + " " + this.getNeuroniosSaidaQtd());
     }
 }

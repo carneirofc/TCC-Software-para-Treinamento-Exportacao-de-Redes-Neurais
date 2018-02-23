@@ -47,7 +47,7 @@ public class Neuronio {
         }
     }
 
-    public Pesos getConnection(int connectionNum) {
+    private Pesos getConnection(int connectionNum) {
         return outputConnections.get(connectionNum);
     }
 
@@ -64,9 +64,9 @@ public class Neuronio {
         calValEntradaFeedForward(camadaAnterior);
         if (ultimaCamada) {
             //valorSaida = FuncaoAtivacao.funcAtivacaoSaida(valorEntradaTotal);
-            valorSaida = rna.getGetFuncaoAtivacaoSaida().calc(valorEntradaTotal);
+            valorSaida = rna.getGetFuncaoAtivacaoSaida().calc(valorEntradaTotal, rna.getTermoLinear());
         } else {
-            valorSaida = rna.getFuncaoAtivacaoInterna().calc(valorEntradaTotal);
+            valorSaida = rna.getFuncaoAtivacaoInterna().calc(valorEntradaTotal, rna.getTermoLinear());
             //valorSaida = FuncaoAtivacao.funcAtivacao(valorEntradaTotal);
         }
     }
@@ -87,12 +87,12 @@ public class Neuronio {
             if (ultimaCamada) {
                 calValEntradaFeedForward(camadaAnterior);
                 //             valorSaida = FuncaoAtivacao.funcAtivacaoSaida(valorEntradaTotal);
-                valorSaida = rna.getGetFuncaoAtivacaoSaida().calc(valorEntradaTotal);
+                valorSaida = rna.getGetFuncaoAtivacaoSaida().calc(valorEntradaTotal, rna.getTermoLinear());
             } else {
                 if (random.nextBoolean()) {
                     calValEntradaFeedForward(camadaAnterior);
                     //valorSaida = FuncaoAtivacao.funcAtivacao(valorEntradaTotal);
-                    valorSaida = rna.getFuncaoAtivacaoInterna().calc(valorEntradaTotal);
+                    valorSaida = rna.getFuncaoAtivacaoInterna().calc(valorEntradaTotal, rna.getTermoLinear());
                     dropped = false;
                 } else {
                     dropped = true;
@@ -103,10 +103,10 @@ public class Neuronio {
             calValEntradaFeedForward(camadaAnterior);
             if (ultimaCamada) {
                 //  valorSaida = (FuncaoAtivacao.funcAtivacaoSaida(valorEntradaTotal) / 2); // Ao usar deve-se utilizar a metade do valor. Técnica de dropout
-                valorSaida = (rna.getGetFuncaoAtivacaoSaida().calc(valorEntradaTotal) / 2); // Ao usar deve-se utilizar a metade do valor. Técnica de dropout
+                valorSaida = (rna.getGetFuncaoAtivacaoSaida().calc(valorEntradaTotal, rna.getTermoLinear()) / 2); // Ao usar deve-se utilizar a metade do valor. Técnica de dropout
             } else {
                 //  valorSaida = (FuncaoAtivacao.funcAtivacao(valorEntradaTotal) / 2);
-                valorSaida = (rna.getFuncaoAtivacaoInterna().calc(valorEntradaTotal) / 2);
+                valorSaida = (rna.getFuncaoAtivacaoInterna().calc(valorEntradaTotal, rna.getTermoLinear()) / 2);
             }
         }
     }
@@ -121,7 +121,7 @@ public class Neuronio {
      */
     public void calculaGradienteSaida(double valorAlvo) {
         //    gradient = (valorAlvo - valorSaida) * FuncaoAtivacao.funcAtivacaoDerivadaSaida(valorEntradaTotal);
-        gradient = (valorAlvo - valorSaida) * rna.getGetFuncaoAtivacaoSaida().calcDerivada(valorEntradaTotal);
+        gradient = (valorAlvo - valorSaida) * rna.getGetFuncaoAtivacaoSaida().calcDerivada(valorEntradaTotal, rna.getTermoLinear());
     }
 
     /**
@@ -142,7 +142,7 @@ public class Neuronio {
                 gradient += (outputConnections.get(neuronio).getPeso()
                         * nextLayer.getNeuron(neuronio).getGradient()
                         //   * FuncaoAtivacao.funcAtivacaoDerivada(valorEntradaTotal));
-                        * rna.getFuncaoAtivacaoInterna().calcDerivada(valorEntradaTotal));
+                        * rna.getFuncaoAtivacaoInterna().calcDerivada(valorEntradaTotal, rna.getTermoLinear()));
             }
         }
     }
@@ -163,7 +163,7 @@ public class Neuronio {
             (o que os pesos apontam) + momentum* delta da última variação dos pesos
              */
             //  double newDeltaWeight = eta * prevNuron.getValorSaida() * gradient + momentum * oldDetaWeight;
-            //double newDeltaWeight = ConfiguracoesRna.getEta() * prevNuron.getValorSaida() * gradient + ConfiguracoesRna.getMomentum() * oldDetaWeight;
+            //double newDeltaWeight = Topologia.getTaxaAprendizado() * prevNuron.getValorSaida() * gradient + Topologia.getMomentum() * oldDetaWeight;
             double newDeltaWeight = rna.getTaxaAprendizado() * prevNuron.getValorSaida() * gradient + rna.getMomentum() * oldDetaWeight;
             prevNuron.getConnection(meuIndex).setDeltaPeso(newDeltaWeight);
             prevNuron.getConnection(meuIndex).updateWeight(newDeltaWeight);
@@ -182,7 +182,7 @@ public class Neuronio {
         return outputConnections;
     }
 
-    public double getGradient() {
+    private double getGradient() {
         return gradient;
     }
 }

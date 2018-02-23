@@ -1,7 +1,7 @@
 package main.config;
 
-import ann.geral.FuncaoTipo;
 import ann.detalhes.Rna;
+import ann.funcao_ativacao.FuncaoTipo;
 
 import java.util.Arrays;
 
@@ -14,7 +14,7 @@ public class ConfigGeralDTO {
         this.topologiaOculta = topologiaOculta;
         this.epocaMaxima = epocaMaxima;
         this.erroAlvo = erroAlvo;
-        this.eta = eta;
+        this.taxaAprendizado = eta;
         this.momentum = momentum;
         this.termoLinear = termoLinear;
         this.faixaPesos = faixaPesos;
@@ -46,7 +46,7 @@ public class ConfigGeralDTO {
     /**
      * Taxa de aprendizado. ETA.
      */
-    private double eta;
+    private double taxaAprendizado;
     /**
      * Valor do momentum.
      */
@@ -59,25 +59,9 @@ public class ConfigGeralDTO {
      * Valor da faixa inicial dosLogTempo pesos [-FAIXA_PESOS,+FAIXA_PESOS].
      */
     private double faixaPesos;
-    /**
-     * # Qual a função de ativação será utilizada
-     * #TANGENTE_HIPERBOLICA = 1;
-     * #SIGMOIDE = 2; ->Não implementada
-     * #LINEAR = 3;
-     * #TANGENTE_HIPERBOLICA_APROXIMADA = 4;
-     * #TANGENTE_HIPERBOLICA_YANN_LECUN = 5;
-     * #TANGENTE_HIPERBOLICA_YANN_LECUN_APROXIMADA = 6;
-     */
+
     private FuncaoTipo funcaoAtivacao;
-    /***
-     * # Qual a função de ativação será utilizada na camada de saída da RNA
-     * #TANGENTE_HIPERBOLICA = 1;
-     * #SIGMOIDE = 2; ->Não implementada
-     * #LINEAR = 3;
-     * #TANGENTE_HIPERBOLICA_APROXIMADA = 4;
-     * #TANGENTE_HIPERBOLICA_YANN_LECUN = 5;
-     * #TANGENTE_HIPERBOLICA_YANN_LECUN_APROXIMADA = 6;
-     **/
+
     private FuncaoTipo funcaoAtivacaoSaida;
 
     /**
@@ -150,12 +134,12 @@ public class ConfigGeralDTO {
         this.erroAlvo = erroAlvo;
     }
 
-    public double getEta() {
-        return eta;
+    public double getTaxaAprendizado() {
+        return taxaAprendizado;
     }
 
-    public void setEta(double eta) {
-        this.eta = eta;
+    public void setTaxaAprendizado(double taxaAprendizado) {
+        this.taxaAprendizado = taxaAprendizado;
     }
 
     public double getMomentum() {
@@ -229,7 +213,7 @@ public class ConfigGeralDTO {
                 "topologiaOculta=" + Arrays.toString(topologiaOculta) +
                 ", epocaMaxima=" + epocaMaxima +
                 ", erroAlvo=" + erroAlvo +
-                ", eta=" + eta +
+                ", taxaAprendizado=" + taxaAprendizado +
                 ", momentum=" + momentum +
                 ", termoLinear=" + termoLinear +
                 ", faixaPesos=" + faixaPesos +

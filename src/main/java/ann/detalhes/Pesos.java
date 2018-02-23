@@ -1,7 +1,5 @@
 package ann.detalhes;
 
-import ann.geral.ConfiguracoesRna;
-
 import java.util.Random;
 
 /**

@@ -1,7 +1,7 @@
 package main.gui.controller;
 
 import ann.controller.RnaController;
-import ann.geral.FuncaoTipo;
+import ann.funcao_ativacao.FuncaoTipo;
 import com.jfoenix.controls.*;
 import data.properties.read.ManipuladorProperties;
 import data.txt.write.Ccode;
