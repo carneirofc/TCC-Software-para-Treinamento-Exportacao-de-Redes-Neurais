@@ -1,5 +1,6 @@
 package main.gui.controller;
 
+import ann.controller.RnaController;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
@@ -161,6 +162,10 @@ public class Opcoes implements Initializable {
             //Janela.dialogo(stackRoot,"Aviso !", "Para determindadas mudanças surtirem efeito uma nova RNA deverá ser criada.", "Determinados tipos de mudanças, como alterações na topologia, exigem que uma nova RNA seja criada. Alterações na função de ativação em uma rede já treinada podem acarretar resultados inesperados.", Alert.AlertType.INFORMATION);
             Janela.dialogo(stackRoot, "Aviso !", "Para determindadas mudanças surtirem efeito uma nova RNA deverá ser criada." +
                     "\nDeterminados tipos de mudanças, como alterações na topologia, exigem que uma nova RNA seja criada. Alterações na função de ativação em uma rede já treinada podem acarretar resultados inesperados.");
+            //todo: arrumar ... improviso ....
+            if (RnaController.getRna() != null) {
+                RnaController.getRna().configuraParametros();
+            }
         }
     }
 
@@ -169,7 +174,7 @@ public class Opcoes implements Initializable {
 
         cbFuncaoAtivacao.setItems(ValoresDisplay.obsFuncaoAtivacaoPossiveis);
         cbFuncAtivacaoSaida.setItems(ValoresDisplay.obsFuncaoAtivacaoPossiveis);
-      //  cbFuncaoDecaimento.setItems();
+        //  cbFuncaoDecaimento.setItems();
 
         cbDroput.setSelected(Ctrl.rnaDropoutProperty().get());
         cbLogTempoCamada.setSelected(Ctrl.logTempoTreinoCamadaProperty().get());

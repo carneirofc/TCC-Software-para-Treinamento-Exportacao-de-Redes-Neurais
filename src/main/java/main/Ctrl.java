@@ -5,6 +5,7 @@
  */
 package main;
 
+import ann.geral.DecaimentoTaxaAprendizado;
 import ann.geral.FuncaoTipo;
 import javafx.beans.property.SimpleDoubleProperty;
 import main.config.ConfigGeral;
@@ -49,6 +50,7 @@ public class Ctrl {
      * Tempo mínimo para atualização da tela em ms
      */
     private static SimpleDoubleProperty guiTempoAtualizacaoSegundos = new SimpleDoubleProperty(0.5);
+    private static Object decaimentoTaxaAprendizado;
     //private static double guiTempoAtualizacaoSegundos = 0.5;
 
 

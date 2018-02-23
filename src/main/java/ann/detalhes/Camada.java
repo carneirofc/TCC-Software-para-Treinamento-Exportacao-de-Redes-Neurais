@@ -8,18 +8,18 @@ import java.util.List;
  *
  * @author Claudio
  */
-public class CamadaRna {
+public class Camada {
 
-    private List<NeuronioRna> listNeuronios = new ArrayList<>();
+    private List<Neuronio> listNeuronios = new ArrayList<>();
 
     /**
      * Adiciona um neurônio a camada.
      */
-    public void addNeuron(NeuronioRna neuron) {
+    public void addNeuron(Neuronio neuron) {
         listNeuronios.add(neuron);
     }
 
-    public NeuronioRna getNeuron(int pos) {
+    public Neuronio getNeuron(int pos) {
         return listNeuronios.get(pos);
     }
 
@@ -27,11 +27,11 @@ public class CamadaRna {
      * Retorna o último neurônio criado na camada. Este deve ser o neurônio
      * BIAS.
      */
-    public NeuronioRna getBias() {
+    public Neuronio getBias() {
         return listNeuronios.get(listNeuronios.size() - 1);
     }
 
-    public List<NeuronioRna> getListNeuronios() {
+    public List<Neuronio> getListNeuronios() {
         return listNeuronios;
     }
 

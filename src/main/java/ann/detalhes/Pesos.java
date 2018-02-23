@@ -9,13 +9,13 @@ import java.util.Random;
  *
  * @author Claudio
  */
-public class ConexaoPesosRna {
+public class Pesos {
 
     private double peso;
     private double deltaPeso;
 
-    public ConexaoPesosRna() {
-        peso = (new Random().nextGaussian()) * ConfiguracoesRna.getFaixaInicialPesos();
+    public Pesos(double faixaInicial) {
+        peso = (new Random().nextGaussian()) * faixaInicial;
         deltaPeso = 0;
     }
 

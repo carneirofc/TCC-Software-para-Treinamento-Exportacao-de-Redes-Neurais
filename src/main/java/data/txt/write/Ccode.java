@@ -1,21 +1,19 @@
 package data.txt.write;
 
 import ann.controller.RnaController;
-import ann.geral.ConfiguracoesRna;
-import ann.detalhes.CamadaRna;
+import ann.detalhes.Camada;
+import ann.detalhes.Rna;
 import data.ConjuntoDados;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Date;
-import java.util.List;
-
-import ann.geral.FuncaoAtivacao;
 import main.Ctrl;
 import main.Recursos;
 import main.utils.ExceptionPlanejada;
 import main.utils.Utilidade;
+
+import java.io.File;
+import java.io.PrintWriter;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Classe responsável por exportar a rede em C
@@ -23,36 +21,40 @@ import main.utils.Utilidade;
  * @author Claudio
  */
 public class Ccode extends TxtWriter {
+    private Rna rna;
+
     /**
      * Cabeçalho
      */
     private void printCabecalho(PrintWriter gravarArq) {
         gravarArq.println("/**\n"
-                + "     Arquivo gerado automaticamente pelo software de treinamento. Por Cláudio Carneiro\n"
-                + "     Info : " + System.getProperty("user.name") + "\n"
-                + "     Data: " + new Date() + "\n\n"
-                + "	    Topologia: " + Utilidade.getJson(ConfiguracoesRna.getTolopogiaArray()) + "\n"
-                + "	    Funcao de ativacao nas camadas escondidas:" + FuncaoAtivacao.getFuncAtivacaoInterno() + " \n"
-                + "	    Funcao de ativacao nas saidas: Linear\n"
-                + "	    Eta: " + ConfiguracoesRna.getEta() + "\n"
-                + " 	Momentum:" + ConfiguracoesRna.getMomentum() + "\n"
-                + "	    Epoca maxima de treinamento: " + ConfiguracoesRna.getMAX_EPOCH() + "\n"
-                + "	    Erro alvo durante treinamento: " + ConfiguracoesRna.getTARGET_ERROR() + "\n"
+                + "\tArquivo gerado automaticamente pelo software de treinamento. Por Cláudio Carneiro\n"
+                + "\tInfo : " + System.getProperty("user.name") + "\n"
+                + "\tData: " + new Date() + "\n\n"
+                + "\tTopologia: " + Utilidade.getJson(rna.getTopologia()) + "\n"
+                + "\tFuncao de ativacao nas camadas escondidas:" + rna.getFuncaoAtivacaoInterna().getStringFuncao(rna) + " \n"
+                + "\tFuncao de ativacao nas saidas: \n" + rna.getGetFuncaoAtivacaoSaida().getStringFuncao(rna)
+                + "\tEta Inicial: " + rna.getTaxaAprendizadoInicial() + "\n"
+                + "\tEta Attual: " + rna.getTaxaAprendizado() + "\n"
+                + "\tMomentum:" + rna.getMomentum() + "\n"
+                + "\tEpoca maxima de treinamento: " + rna.getEpocaMaxima() + "\n"
+                + "\tEpoca atual: " + rna.getEpocaAtual() + "\n"
+                + "\tErro alvo durante treinamento: " + rna.getErroAlvo() + "\n"
                 + "\n\n"
-                + "     O nome das variaveis possui informacoes a respeito de sua localizacao na ANN. ex:\n"
-                + "     w010 -> o primeiro 0 indica a camada que o neuronio possuidor desse peso esta,\n"
-                + "     o segundo numero,'1', indica o número do neurônio da camada (o ultimo neuronio e sempre um bias)\n"
-                + "     o ultimo numero ,'0', indica qual a posicao do neuronio alvo localizado na camada seguinte. \n"
-                + "     As variáveis de entrada estão na mesma ordem em que são encontradas no arquivo de treinamento.\n"
-                + "   \n" +
-                "   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:\n" +
+                + "\tO nome das variaveis possui informacoes a respeito de sua localizacao na ANN. ex:\n"
+                + "\tw010 -> o primeiro 0 indica a camada que o neuronio possuidor desse peso esta,\n"
+                + "\to segundo numero,'1', indica o número do neurônio da camada (o ultimo neuronio e sempre um bias)\n"
+                + "\to ultimo numero ,'0', indica qual a posicao do neuronio alvo localizado na camada seguinte. \n"
+                + "\tAs variáveis de entrada estão na mesma ordem em que são encontradas no arquivo de treinamento.\n"
+                + "\n" +
+                "       Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:\n" +
                 "   \n" +
-                "1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.\n" +
-                "2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer\n" +
-                " in the documentation and/or other materials provided with the distribution.\n" +
-                "3. Neither the name of the Institute nor the names of its contributors may be used to endorse or promote products derived from\n" +
-                " this software without specific prior written permission.\n" +
-                " \n" +
+                "       1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.\n" +
+                "       2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer\n" +
+                "           in the documentation and/or other materials provided with the distribution.\n" +
+                "       3. Neither the name of the Institute nor the names of its contributors may be used to endorse or promote products derived from\n" +
+                "           this software without specific prior written permission.\n" +
+                " \n\n" +
                 " THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, \n" +
                 " INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.\n" +
                 " IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, \n" +
@@ -78,35 +80,7 @@ public class Ccode extends TxtWriter {
 
     }
 
-    private void declaraPesosAntigo(PrintWriter gravarArq, List<CamadaRna> layers) {
-        for (int layerNum = 0; layerNum < layers.size() - 1; layerNum++) {
-            gravarArq.println("// -------- Layer " + layerNum + " --------");
-
-            for (int neuronNum = 0; neuronNum < layers.get(layerNum).getSizeListNeuronios(); neuronNum++) {
-                if (neuronNum == layers.get(layerNum).getListNeuronios().size() - 1) {
-                    gravarArq.println("// Bias");
-                } else {
-                    gravarArq.println("// Neuron " + neuronNum);
-                }
-                gravarArq.printf("double ");
-                for (int conNeu = 0; conNeu < layers.get(layerNum).getNeuron(neuronNum).getOutputConnections().size(); conNeu++) {
-                    gravarArq.printf(
-                            "w" + layerNum
-                                    + "_" + neuronNum
-                                    + "_" + conNeu
-                                    + "=" + layers.get(layerNum).getNeuron(neuronNum).getOutputConnections().get(conNeu).getPeso()
-                    );
-                    if (conNeu == layers.get(layerNum).getNeuron(neuronNum).getOutputConnections().size() - 1) {
-                        gravarArq.println(";");
-                    } else {
-                        gravarArq.printf(",");
-                    }
-                }
-            }
-        }
-    }
-
-    private void declaraPesos(PrintWriter gravarArq, List<CamadaRna> layers) {
+    private void declaraPesos(PrintWriter gravarArq, List<Camada> layers) {
         for (int layerNum = 0; layerNum < layers.size() - 1; layerNum++) {
             gravarArq.println("\n// -------- Layer " + layerNum + " --------");
 
@@ -150,7 +124,7 @@ public class Ccode extends TxtWriter {
     /**
      * Declaração de variáveis globais
      */
-    private void printDeclaracao(PrintWriter gravarArq, List<CamadaRna> layers) {
+    private void printDeclaracao(PrintWriter gravarArq, List<Camada> layers) {
         declaraPesos(gravarArq, layers);
 
 
@@ -194,24 +168,22 @@ public class Ccode extends TxtWriter {
     }
 
     private void printNormalizacao(PrintWriter printWriter) {
-        printWriter.println("void normaliza(double *in, int i, double *outN) //(double min, double max, double x)\n"
-                + "{\n"
-                //   + "	double a = (2.0) / (inMax[i] - inMin[i]);\n"
-                + "	double a = (NORM_MAX - NORM_MIN) / (inMax[i] - inMin[i]);\n"
-                + "	double b = ((-(NORM_MAX)) * inMin[i] + (NORM_MIN) * inMax[i]) / (inMax[i] - inMin[i]);\n"
-                + "	*outN = (a * *in + b);\n"
+        printWriter.println("void normaliza(double *in, int i, double *outN){\n"
+                + "\tdouble a = (NORM_MAX - NORM_MIN) / (inMax[i] - inMin[i]);\n"
+                + "\tdouble b = ((-(NORM_MAX)) * inMin[i] + (NORM_MIN) * inMax[i]) / (inMax[i] - inMin[i]);\n"
+                + "\t*outN = (a * *in + b);\n"
                 + "}");
     }
 
     private void printDesnormalizacao(PrintWriter printWriter) {
-        printWriter.println("void desnormaliza(double x, int i, double *resNorm)\n"
-                + "{\n"
-                + "	double a = (NORM_MAX - (NORM_MIN)) / (outMaxD[i] - outMinD[i]);\n"
-                + "	double b = (-(NORM_MAX) * outMinD[i] + (NORM_MIN) * outMaxD[i]) / (outMaxD[i] - outMinD[i]);\n"
-                + "	*resNorm = (x - b) / a;\n"
+        printWriter.println("void desnormaliza(double x, int i, double *resNorm){\n"
+                + "\tdouble a = (NORM_MAX - (NORM_MIN)) / (outMaxD[i] - outMinD[i]);\n"
+                + "\tdouble b = (-(NORM_MAX) * outMinD[i] + (NORM_MIN) * outMaxD[i]) / (outMaxD[i] - outMinD[i]);\n"
+                + "\t*resNorm = (x - b) / a;\n"
                 + "}");
     }
-    private void printRedeNeuralFeedForward(PrintWriter gravarArq, List<CamadaRna> layers) {
+
+    private void printRedeNeuralFeedForward(PrintWriter gravarArq, List<Camada> layers) {
 
         gravarArq.printf("void reden_(");
         for (int i = 0; i < ConjuntoDados.dadosTreinamento.getNeuroniosEntradaQtd(); i++) {
@@ -295,9 +267,9 @@ public class Ccode extends TxtWriter {
         }
 
         // Última camada ...
-        CamadaRna penultimaCamada = layers.get(layers.size() - 2);
+        Camada penultimaCamada = layers.get(layers.size() - 2);
         int penultimaCamadaNum = (layers.size() - 2);
-        CamadaRna ultimaCamada = layers.get(layers.size() - 1);
+        Camada ultimaCamada = layers.get(layers.size() - 1);
 
         // Função de Ativação da Saída
         for (int neuronNum = 0; neuronNum < (ultimaCamada.getListNeuronios().size() - 1); neuronNum++) {
@@ -314,47 +286,22 @@ public class Ccode extends TxtWriter {
         // Desnormalizando as Saídas da RNA e Enviando de Volta
         for (int neuronNum = 0; neuronNum < (ultimaCamada.getListNeuronios().size() - 1); neuronNum++) {
             gravarArq.printf("desnormaliza(  ");
-            gravarArq.println("out" + neuronNum + "D , "+ neuronNum + ", &out" + neuronNum + "D);");
+            gravarArq.println("out" + neuronNum + "D , " + neuronNum + ", &out" + neuronNum + "D);");
         }
         for (int i = 0; i < ConjuntoDados.dadosTreinamento.getNeuroniosSaidaQtd(); i++) {
             gravarArq.printf(" *out" + i + " =  out" + i + "D;");
         }
         gravarArq.printf("\n}");
-
-  /*
-        CamadaRna penultimaCamada = layers.get(layers.size() - 2);
-        int penultimaCamadaNum = (layers.size() - 2);
-        CamadaRna ultimaCamada = layers.get(layers.size() - 1);
-
-        for (int neuronNum = 0; neuronNum < (ultimaCamada.getListNeuronios().size() - 1); neuronNum++) {
-            gravarArq.printf("desnormaliza( (");
-            for (int i = 0; i < penultimaCamada.getSizeListNeuronios() - 1; i++) {
-                gravarArq.printf(" in" + penultimaCamadaNum + "[" + i + "] *w" + penultimaCamadaNum + "[" + i + "][" + neuronNum + "] + ");
-            }
-            int n = penultimaCamada.getListNeuronios().size() - 1;
-            gravarArq.printf(
-                    penultimaCamada.getBias().getValorSaida() + "*w" + penultimaCamadaNum + "[" + n + "][" + neuronNum + "]");
-            gravarArq.println(")," + neuronNum + ", &out" + neuronNum + "D);");
-        }
-        for (int i = 0; i < ConjuntoDados.dadosTreinamento.getNeuroniosSaidaQtd(); i++) {
-            gravarArq.printf(" *out" + i + " =  out" + i + "D;");
-        }
-        gravarArq.printf("\n}");
-*/
     }
 
     private void printFuncAtivacaoInterna(PrintWriter gravarArq) {
-        gravarArq.println(
-                "void actvFunc(double x, double *outVal){\n"
-                        + FuncaoAtivacao.getFuncAtivacaoInterno()
-                        + "\n}");
+        gravarArq.println("void actvFunc(double x, double *outVal){" + rna.getFuncaoAtivacaoInterna().getStringFuncao(rna) + "}\n");
     }
+
     private void printFuncAtivacaoSaida(PrintWriter gravarArq) {
-        gravarArq.println(
-                "void actvFuncSaida(double x, double *outVal){\n"
-                        + FuncaoAtivacao.getFuncaoAtivacaoSaida()
-                        + "\n}");
+        gravarArq.println("void actvFuncSaida(double x, double *outVal){" + rna.getGetFuncaoAtivacaoSaida().getStringFuncao(rna) + "}\n");
     }
+
 
     /**
      * Exporta a rede neural em uma função em c
@@ -362,11 +309,13 @@ public class Ccode extends TxtWriter {
      * @param file arquivo a ser criado
      */
     public void salvarPesosC(File file) throws Exception {
-
         if (!Ctrl.isRnaEmExecucao() && Ctrl.isRnaTreinada() && Ctrl.isDadosTreinoCarregados() && Ctrl.isPropertiesDadosCarregados()) {
+            rna = RnaController.getRna();
+            Objects.requireNonNull(rna, "A RNA não foi inicializada.");
 
             criaWriter(file, Recursos.EXTENSION_FILTER_C);
-            List<CamadaRna> layers = RnaController.getRna().getCamadas();
+
+            List<Camada> layers = rna.getCamadas();
 
             printCabecalho(getPrintWriter());
             printDeclaracao(getPrintWriter(), layers);

@@ -159,6 +159,8 @@ public class Janela {
      * @param e a Exception
      */
     public static Optional exceptionDialog(Exception e) {
+        if (e == null)
+            return Optional.empty();
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Uma Exception foi lançada.");
         String header = "Ops ... ";

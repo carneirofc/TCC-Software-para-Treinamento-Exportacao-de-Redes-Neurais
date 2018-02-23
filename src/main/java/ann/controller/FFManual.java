@@ -4,6 +4,7 @@ import ann.detalhes.Rna;
 import data.ConjuntoDados;
 import data.Operacoes;
 
+import javafx.concurrent.Task;
 import main.gui.Janela;
 import main.gui.ValoresDisplay;
 import javafx.application.Platform;
@@ -12,6 +13,8 @@ import main.Ctrl;
 import main.utils.Converter;
 import main.utils.ExceptionPlanejada;
 
+import java.util.concurrent.ExecutionException;
+
 /**
  * Realiza as operações de feed forward na rede.
  * <p>
@@ -19,18 +22,18 @@ import main.utils.ExceptionPlanejada;
  *
  * @author Claudio
  */
-public class FFManual implements Runnable {
+public class FFManual extends Task<String> {
 
-    private Rna net;
-    private String inval;
+    private final Rna net;
+    private final String inval;
 
-    public FFManual(Rna net, String inval) {
+    FFManual(Rna net, String inval) {
         this.net = net;
         this.inval = inval;
     }
 
-    private String feedForward() throws Exception {
-
+    @Override
+    protected String call() throws Exception {
         double[] inDoubleVals = Converter.stringToDoubleVector(inval);
         if (inDoubleVals == null)
             throw new ExceptionPlanejada("Valores de entrada vazios.");
@@ -42,6 +45,7 @@ public class FFManual implements Runnable {
         if (inDoubleVals.length != ConjuntoDados.dadosTreinamento.getDadosEntrada()[0].length)
             throw new ExceptionPlanejada(" inDoubleVals.length != DadosRna.dadosTreinamento.getDadosEntrada()[0].length.");
 
+        Ctrl.setRnaEmExecucao(true);
         Operacoes.setNormMinMax(ConjuntoDados.getNormMin(), ConjuntoDados.getNormMax());
         Operacoes.normalizeVector(inDoubleVals, ConjuntoDados.getMinEntrada(), ConjuntoDados.getMaxEntrada());
 
@@ -53,13 +57,20 @@ public class FFManual implements Runnable {
     }
 
     @Override
-    public void run() {
+    protected void failed() {
+        super.failed();
+        Ctrl.setRnaEmExecucao(false);
+        Janela.exceptionDialog(new Exception(getException()));
+    }
+
+    @Override
+    protected void succeeded() {
+        super.succeeded();
+        Ctrl.setRnaEmExecucao(false);
         try {
-            String res = feedForward();
-            Platform.runLater(() -> ((SimpleStringProperty) ValoresDisplay.obsFeedforwardResultado).set(res.replaceAll(";", "\n")));
-        } catch (Exception e) {
-            e.printStackTrace();
-            Platform.runLater(() -> Janela.exceptionDialog(e));
+            ((SimpleStringProperty) ValoresDisplay.obsFeedforwardResultado).set(get().replaceAll(";", "\n"));
+        } catch (InterruptedException | ExecutionException e) {
+            Janela.exceptionDialog(new Exception(e));
         }
     }
 }

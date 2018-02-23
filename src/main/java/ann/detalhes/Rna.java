@@ -1,13 +1,16 @@
 package ann.detalhes;
 
 import ann.controller.RnaController;
-import ann.worker.Worker;
+import ann.geral.ConfiguracoesRna;
+import ann.geral.DecaimentoTaxaAprendizado;
+import ann.geral.FuncaoTipo;
 import data.ConjuntoDados;
 import main.Ctrl;
 import main.Recursos;
 import main.utils.ExceptionPlanejada;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -17,46 +20,73 @@ import java.util.List;
  */
 public class Rna {
 
-    /**
-     * Lock utilizado parea multithreading
-     */
-    private Object lock = new Object();
-    private Double rms = 0.0;
-    /**
-     * Camadas da rede neural.
-     */
-    private final List<CamadaRna> camadas = new ArrayList<>();
-    /**
-     * Erro
-     */
-    private double erroEpoca = 0;
 
     /**
-     * Época atual da rede (treinamento)
+     * Faixa na qual os pesos das ligações será buscada. Este valor representa a
+     * "meia largura" ou seja, para um valor de 0.5, serão sorteados pesos entre
+     * -0.5 e 0.5.
      */
-    private long epochAtual = 0;
+    private final double faixaInicialPesos;
+    private final boolean dropout;
+    private final double termoLinear;
+    private final FuncaoTipo funcaoAtivacaoInterna;
+    private final FuncaoTipo getFuncaoAtivacaoSaida;
+    private final DecaimentoTaxaAprendizado decaimentoTaxaAprendizado;
+    private final int[] topologia;
+    private final List<Camada> camadas = new ArrayList<>();
+
+    private long epocaMaxima;
+    private double erroAlvo;
+    private double taxaAprendizado;
+    private double taxaAprendizadoInicial;
+    private double momentum;
+
+    private Double erroIteracao = 0.0;
+    private double erroEpoca = 0;
+    private long epocaAtual = 0;
+
 
     /**
      * Contrutor da rede. Informa ao sistema que a rede não foi treinada, cria
      * as camadas e os neurônios.
      *
-     * @param dopout   diz se a rna será treinada utilizando a técnica de dropout ou não ...
-     * @param topology vetor contendo a topologia da rna. Nº  de colunas representam as camadas e seus valores a quantidade de neurônios.
+     * @param topologia vetor contendo a topologia da rna. Nº  de colunas representam as camadas e seus valores a quantidade de neurônios.
      */
-    public Rna(final int[] topology, boolean dopout) {
-        this.dropout = dopout;
+    public Rna(final int[] topologia) {
+        // @// TODO: 2/22/2018 arrumar o decaimento da taxa de aprendizagem
+        this(ConfiguracoesRna.getFaixaInicialPesos(),
+                false,
+                ConfiguracoesRna.getLINEAR_TERM(),
+                Ctrl.getFuncaoAtivacaoInterno(),
+                Ctrl.getFuncaoAtivacaoSaida(),
+                ConfiguracoesRna.getTolopogiaArray(),
+                (taxaAprendizado, param1, param2, param3) -> ((param1 % param2 == 0) ? (taxaAprendizado / 2) : (taxaAprendizado)));
         Ctrl.setRnaTreinada(false);
-        inicializaLayers(topology);
+        inicializaLayers(topologia);
+        configuraParametros();
     }
 
-    public Object getLock() {
-        return lock;
+    private void atualizaEta() {
+        taxaAprendizado = decaimentoTaxaAprendizado.calc(taxaAprendizado, epocaAtual, 1000, 0);
     }
 
-    /**
-     * Indica se a rede foi treinada utilizando a técnica de dropout
-     */
-    private boolean dropout;
+    private Rna(double faixaInicialPesos, boolean dropout, double termoLinear, FuncaoTipo funcaoAtivacaoInterna, FuncaoTipo getFuncaoAtivacaoSaida, int[] topologia, DecaimentoTaxaAprendizado decaimentoTaxaAprendizado) {
+        this.faixaInicialPesos = faixaInicialPesos;
+        this.dropout = dropout;
+        this.termoLinear = termoLinear;
+        this.funcaoAtivacaoInterna = funcaoAtivacaoInterna;
+        this.getFuncaoAtivacaoSaida = getFuncaoAtivacaoSaida;
+        this.topologia = topologia;
+        this.decaimentoTaxaAprendizado = decaimentoTaxaAprendizado;
+    }
+
+    public void configuraParametros() {
+        this.epocaMaxima = ConfiguracoesRna.getMAX_EPOCH();
+        this.erroAlvo = ConfiguracoesRna.getTARGET_ERROR();
+        this.taxaAprendizadoInicial = ConfiguracoesRna.getEta();
+        this.taxaAprendizado = taxaAprendizadoInicial;
+        this.momentum = ConfiguracoesRna.getMomentum();
+    }
 
     /**
      * Cria as as camadas e seus devidos neurônios de conforme descrito nas
@@ -69,7 +99,7 @@ public class Rna {
          */
         int numNeuroniosProxLayer;
         for (int layerNum = 0; layerNum < topology.length; layerNum++) {
-            CamadaRna camadaRna = new CamadaRna();
+            Camada camadaRna = new Camada();
 
             // Quantos neurônios existem na próxima camada?
             if ((layerNum == (topology.length - 1))) { // Se estou no último layer
@@ -82,7 +112,7 @@ public class Rna {
                 Adiciona os neuronios informados mais o bias.
              */
             for (int neuronNum = 0; neuronNum <= topology[layerNum]; neuronNum++) {
-                camadaRna.addNeuron(new NeuronioRna(numNeuroniosProxLayer, neuronNum));
+                camadaRna.addNeuron(new Neuronio(numNeuroniosProxLayer, neuronNum, this));
             }
             // Força o valor do bias em -1 // Assim funciona melhor 
             camadaRna.getBias().setValorSaida(-1.0);
@@ -95,14 +125,14 @@ public class Rna {
      * somatório targetVals[i] - valoeCalculado[i]
      */
     public double calcIteErro(double[] targetVals) {
-        CamadaRna outputLayer = getUltimaCamada();
-        rms = 0.0;
+        Camada outputLayer = getUltimaCamada();
+        erroIteracao = 0.0;
         for (int neuronNum = 0; neuronNum < (ConjuntoDados.dadosTreinamento.getNeuroniosSaidaQtd()); neuronNum++) {
-            rms += Math.abs(targetVals[neuronNum] - outputLayer.getNeuron(neuronNum).getValorSaida());
+            erroIteracao += Math.abs(targetVals[neuronNum] - outputLayer.getNeuron(neuronNum).getValorSaida());
         }
-        rms /= ConjuntoDados.dadosTreinamento.getNeuroniosSaidaQtd();
-        //  rms = Math.sqrt(rms / DadosRna.getNeuroniosSaidaQtd());
-        return rms;
+        erroIteracao /= ConjuntoDados.dadosTreinamento.getNeuroniosSaidaQtd();
+        //  erroIteracao = Math.sqrt(erroIteracao / DadosRna.getNeuroniosSaidaQtd());
+        return erroIteracao;
     }
 
     /**
@@ -116,17 +146,17 @@ public class Rna {
          */
         calcIteErro(targetVals);
 
-        erroEpoca += rms;
+        erroEpoca += erroIteracao;
         erroEpoca /= 2;
     }
 
     /**
      * Realiza os cálculos de backpropagation (treinamento ....)
      */
-    public void backPropagation(double[] targetVals) throws Exception {
+    public void backPropagation(double[] targetVals) {
 
-        CamadaRna outputLayer = camadas.get(camadas.size() - 1);
-        CamadaRna prevOutLayer = camadas.get(camadas.size() - 2);
+        Camada outputLayer = camadas.get(camadas.size() - 1);
+        Camada prevOutLayer = camadas.get(camadas.size() - 2);
 
         /*
               Cálculo dosLogTempo componentes do vetor gradiente e atualização dosLogTempo pesos de entrada
@@ -143,16 +173,19 @@ public class Rna {
             e atualização dosLogTempo pesos de entrada.
          */
         for (int camadaEscondida = camadas.size() - 2; camadaEscondida > 0; --camadaEscondida) {
-            CamadaRna camada = camadas.get(camadaEscondida);
-            CamadaRna camadaSeguinte = camadas.get(camadaEscondida + 1);
-            CamadaRna camadaAnterior = camadas.get(camadaEscondida - 1);
+            Camada camada = camadas.get(camadaEscondida);
+            Camada camadaSeguinte = camadas.get(camadaEscondida + 1);
+            Camada camadaAnterior = camadas.get(camadaEscondida - 1);
+            calcCamadaEscondida(camada, camadaSeguinte, camadaAnterior);
+        }
+    }
 
-            for (int neuronio = 0; neuronio < camada.getSizeListNeuronios(); neuronio++) {
-                NeuronioRna neuronioRna = camada.getNeuron(neuronio);
-                neuronioRna.calculaGradiente(camadaSeguinte);
-                if (neuronio != (camada.getSizeListNeuronios() - 1)) { // O último neurônio é o bias. Não possui conexão de entrada.
-                    neuronioRna.atualizaPesos(camadaAnterior);
-                }
+    private void calcCamadaEscondida(Camada camada, Camada camadaSeguinte, Camada camadaAnterior) {
+        for (int neuronio = 0; neuronio < camada.getSizeListNeuronios(); neuronio++) {
+            Neuronio neuronioRna = camada.getNeuron(neuronio);
+            neuronioRna.calculaGradiente(camadaSeguinte);
+            if (neuronio != (camada.getSizeListNeuronios() - 1)) { // O último neurônio é o bias. Não possui conexão de entrada.
+                neuronioRna.atualizaPesos(camadaAnterior);
             }
         }
     }
@@ -166,8 +199,8 @@ public class Rna {
         long fAlg;
         antes = System.nanoTime();
         iAlg = antes;
-        CamadaRna outputLayer = camadas.get(camadas.size() - 1);
-        CamadaRna prevOutLayer = camadas.get(camadas.size() - 2);
+        Camada outputLayer = camadas.get(camadas.size() - 1);
+        Camada prevOutLayer = camadas.get(camadas.size() - 2);
 
         /*
               Cálculo dosLogTempo componentes do vetor gradiente e atualização dosLogTempo pesos de entrada
@@ -187,17 +220,11 @@ public class Rna {
          */
         for (int camadaEscondida = camadas.size() - 2; camadaEscondida > 0; --camadaEscondida) {
             antes = System.nanoTime();
-            CamadaRna camada = camadas.get(camadaEscondida);
-            CamadaRna camadaSeguinte = camadas.get(camadaEscondida + 1);
-            CamadaRna camadaAnterior = camadas.get(camadaEscondida - 1);
+            Camada camada = camadas.get(camadaEscondida);
+            Camada camadaSeguinte = camadas.get(camadaEscondida + 1);
+            Camada camadaAnterior = camadas.get(camadaEscondida - 1);
 
-            for (int neuronio = 0; neuronio < camada.getSizeListNeuronios(); neuronio++) {
-                NeuronioRna neuronioRna = camada.getNeuron(neuronio);
-                neuronioRna.calculaGradiente(camadaSeguinte);
-                if (neuronio != (camada.getSizeListNeuronios() - 1)) { // O último neurônio é o bias. Não possui conexão de entrada.
-                    neuronioRna.atualizaPesos(camadaAnterior);
-                }
-            }
+            calcCamadaEscondida(camada, camadaSeguinte, camadaAnterior);
             depois = System.nanoTime();
             RnaController.dosLogTempo.write(Long.toString(depois - antes).getBytes(Recursos.CHARSET_PADRAO));
             if (camadaEscondida != 1) {
@@ -210,64 +237,6 @@ public class Rna {
         RnaController.dosLogTempo.write("\n".getBytes(Recursos.CHARSET_PADRAO));
     }
 
-    /**
-     * Realiza os cálculos de backpropagation (treinamento ....)
-     */
-    public void backPropagationLogMultithread(double[] targetVals) throws Exception {
-        //  long antes, depois;
-        //  antes = System.nanoTime();
-        CamadaRna outputLayer = camadas.get(camadas.size() - 1);
-        CamadaRna prevOutLayer = camadas.get(camadas.size() - 2);
-
-        /*
-              Cálculo dosLogTempo componentes do vetor gradiente e atualização dosLogTempo pesos de entrada
-               nos neurônios da camada de saída.  (ref[i] - saídaNeuron[i])*(DxFt(entradaNeuron[i]))
-         */
-        for (int neuronNum = 0; neuronNum < (outputLayer.getSizeListNeuronios() - 1); neuronNum++) {
-            outputLayer.getNeuron(neuronNum).calculaGradienteSaida(targetVals[neuronNum]);
-            outputLayer.getNeuron(neuronNum).atualizaPesos(prevOutLayer);
-        }
-        // depois = System.nanoTime();
-        //  RnaController.dosLogTempo.write(Long.toString(depois - antes).getBytes(Recursos.CHARSET_PADRAO));
-        //  RnaController.dosLogTempo.write(",".getBytes(Recursos.CHARSET_PADRAO));
-
-        /*
-               Cálculo dosLogTempo gradientes parciais das camadas escondidas (gradiente local)
-            e atualização dosLogTempo pesos de entrada.
-         */
-        for (int camadaEscondida = camadas.size() - 2; camadaEscondida > 0; --camadaEscondida) {
-            //      antes = System.nanoTime();
-            CamadaRna camada = camadas.get(camadaEscondida);
-            CamadaRna camadaSeguinte = camadas.get(camadaEscondida + 1);
-            CamadaRna camadaAnterior = camadas.get(camadaEscondida - 1);
-
-            Worker.addWorkerToPool(camada, camadaSeguinte, camadaAnterior);
-            // Worker.setCamadas(camada, camadaSeguinte, camadaAnterior);
-
-            // Esperando ser notificada pelas Worker Threads ...
-            synchronized (lock) {
-                if (Worker.atomicInteger.get() != 0) {
-                    lock.wait();
-                }
-            }
-            /*
-            for (int neuronio = 0; neuronio < camada.getSizeListNeuronios(); neuronio++) {
-                NeuronioRna neuronioRna = camada.getNeuron(neuronio);
-                neuronioRna.calculaGradiente(camadaSeguinte);
-                if (neuronio != (camada.getSizeListNeuronios() - 1)) { // O último neurônio é o bias. Não possui conexão de entrada.
-                    neuronioRna.atualizaPesos(camadaAnterior);
-                }
-            }
-*/
-
-            // depois = System.nanoTime();
-            //  RnaController.dosLogTempo.write(Long.toString(depois - antes).getBytes(Recursos.CHARSET_PADRAO));
-            //   if (camadaEscondida != 1) {
-            //        RnaController.dosLogTempo.write(",".getBytes(Recursos.CHARSET_PADRAO));
-            //     }
-        }
-        //   RnaController.dosLogTempo.write("\n".getBytes(Recursos.CHARSET_PADRAO));
-    }
 
     /**
      * FeedForward
@@ -299,8 +268,8 @@ public class Rna {
         for (int numCamada = 1; numCamada < camadas.size(); numCamada++) {
             ultimaCamada = (numCamada == (camadas.size() - 1));// Verifica se está na última camada
             antes = System.nanoTime();
-            CamadaRna camadaAnterior = camadas.get(numCamada - 1);
-            CamadaRna camadaAtual = camadas.get(numCamada);
+            Camada camadaAnterior = camadas.get(numCamada - 1);
+            Camada camadaAtual = camadas.get(numCamada);
             /*
                  Alimenta as entradas dosLogTempo neurônios da camada de entradas exceto o neurônio de bias.
              */
@@ -347,8 +316,8 @@ public class Rna {
         for (int numCamada = 1; numCamada < camadas.size(); numCamada++) {
             ultimaCamada = (numCamada == (camadas.size() - 1));// Verifica se está na última camada
             //   antes = System.nanoTime();
-            CamadaRna camadaAnterior = camadas.get(numCamada - 1);
-            CamadaRna camadaAtual = camadas.get(numCamada);
+            Camada camadaAnterior = camadas.get(numCamada - 1);
+            Camada camadaAtual = camadas.get(numCamada);
             /*
                  Alimenta as entradas dosLogTempo neurônios da camada de entradas exceto o neurônio de bias.
              */
@@ -371,7 +340,7 @@ public class Rna {
      * Pega o resultado da iteração
      */
     public void getResultsIte(double[] resultVals) throws Exception {
-        CamadaRna outputLayer = camadas.get(camadas.size() - 1);
+        Camada outputLayer = camadas.get(camadas.size() - 1);
         if (resultVals.length != (outputLayer.getSizeListNeuronios() - 1)) {
             throw new ExceptionPlanejada("O número de neurônios de saída e a quantidade de saídas esperardas não sao iguais.");
         }
@@ -381,12 +350,13 @@ public class Rna {
         }
     }
 
-    public synchronized long getEpochAtual() {
-        return epochAtual;
+    public synchronized long getEpocaAtual() {
+        return epocaAtual;
     }
 
     public synchronized void addEpoch() {
-        this.epochAtual++;
+        this.epocaAtual++;
+        atualizaEta();
     }
 
     public double getErroEpoca() {
@@ -397,27 +367,89 @@ public class Rna {
         this.erroEpoca = 0;
     }
 
-    public List<CamadaRna> getCamadas() {
+    public List<Camada> getCamadas() {
         return camadas;
     }
 
-    public CamadaRna getUltimaCamada() {
+    public Camada getUltimaCamada() {
         return camadas.get(camadas.size() - 1);
     }
 
-    public CamadaRna getPrimeiraCamada() {
+    public Camada getPrimeiraCamada() {
         return camadas.get(0);
     }
 
     @Override
     public String toString() {
         return "Rna{" +
-                "lock=" + lock +
-                ", rms=" + rms +
-                ", camadas=" + camadas +
-                ", erroEpoca=" + erroEpoca +
-                ", epochAtual=" + epochAtual +
+                "faixaInicialPesos=" + faixaInicialPesos +
                 ", dropout=" + dropout +
+                ", termoLinear=" + termoLinear +
+                ", funcaoAtivacaoInterna=" + funcaoAtivacaoInterna +
+                ", getFuncaoAtivacaoSaida=" + getFuncaoAtivacaoSaida +
+                ", decaimentoTaxaAprendizado=" + decaimentoTaxaAprendizado +
+                ", topologia=" + Arrays.toString(topologia) +
+                ", camadas=" + camadas +
+                ", epocaMaxima=" + epocaMaxima +
+                ", erroAlvo=" + erroAlvo +
+                ", taxaAprendizado=" + taxaAprendizado +
+                ", taxaAprendizadoInicial=" + taxaAprendizadoInicial +
+                ", momentum=" + momentum +
+                ", erroIteracao=" + erroIteracao +
+                ", erroEpoca=" + erroEpoca +
+                ", epocaAtual=" + epocaAtual +
                 '}';
+    }
+
+    public DecaimentoTaxaAprendizado getDecaimentoTaxaAprendizado() {
+        return decaimentoTaxaAprendizado;
+    }
+
+    public double getTaxaAprendizadoInicial() {
+        return taxaAprendizadoInicial;
+    }
+
+    public double getFaixaInicialPesos() {
+        return faixaInicialPesos;
+    }
+
+    public boolean isDropout() {
+        return dropout;
+    }
+
+    public double getTermoLinear() {
+        return termoLinear;
+    }
+
+    public FuncaoTipo getFuncaoAtivacaoInterna() {
+        return funcaoAtivacaoInterna;
+    }
+
+    public FuncaoTipo getGetFuncaoAtivacaoSaida() {
+        return getFuncaoAtivacaoSaida;
+    }
+
+    public int[] getTopologia() {
+        return topologia;
+    }
+
+    public long getEpocaMaxima() {
+        return epocaMaxima;
+    }
+
+    public double getErroAlvo() {
+        return erroAlvo;
+    }
+
+    public double getTaxaAprendizado() {
+        return taxaAprendizado;
+    }
+
+    public double getMomentum() {
+        return momentum;
+    }
+
+    public Double getErroIteracao() {
+        return erroIteracao;
     }
 }

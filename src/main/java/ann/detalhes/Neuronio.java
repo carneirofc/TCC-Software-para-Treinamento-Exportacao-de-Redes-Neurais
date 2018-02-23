@@ -1,7 +1,5 @@
 package ann.detalhes;
 
-import ann.geral.FuncaoAtivacao;
-import ann.geral.ConfiguracoesRna;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +11,7 @@ import java.util.Random;
  *
  * @author Claudio
  */
-public class NeuronioRna {
+public class Neuronio {
     /**
      * Usado no processo de dropout
      */
@@ -35,19 +33,21 @@ public class NeuronioRna {
 
     private boolean dropped = false;
 
-    private List<ConexaoPesosRna> outputConnections = new ArrayList<>();
+    private List<Pesos> outputConnections = new ArrayList<>();
+    private final Rna rna;
 
     /**
      * Inicializa um neurônio com suas conexões
      */
-    public NeuronioRna(int qtdSaidas, int meuIndex) {
+    Neuronio(int qtdSaidas, int meuIndex, Rna rna) {
+        this.rna = rna;
         this.meuIndex = meuIndex;
         for (int connectionNum = 0; connectionNum < qtdSaidas; connectionNum++) {
-            outputConnections.add(new ConexaoPesosRna());
+            outputConnections.add(new Pesos(rna.getFaixaInicialPesos()));
         }
     }
 
-    public ConexaoPesosRna getConnection(int connectionNum) {
+    public Pesos getConnection(int connectionNum) {
         return outputConnections.get(connectionNum);
     }
 
@@ -60,16 +60,18 @@ public class NeuronioRna {
      * @param ultimaCamada se é a camada de saída (para dar liberdade de usar
      *                     funções de ativação diferentes)
      */
-    public void feedForward(CamadaRna camadaAnterior, boolean ultimaCamada) {
+    public void feedForward(Camada camadaAnterior, boolean ultimaCamada) {
         calValEntradaFeedForward(camadaAnterior);
         if (ultimaCamada) {
-            valorSaida = FuncaoAtivacao.funcAtivacaoSaida(valorEntradaTotal);
+            //valorSaida = FuncaoAtivacao.funcAtivacaoSaida(valorEntradaTotal);
+            valorSaida = rna.getGetFuncaoAtivacaoSaida().calc(valorEntradaTotal);
         } else {
-            valorSaida = FuncaoAtivacao.funcAtivacao(valorEntradaTotal);
+            valorSaida = rna.getFuncaoAtivacaoInterna().calc(valorEntradaTotal);
+            //valorSaida = FuncaoAtivacao.funcAtivacao(valorEntradaTotal);
         }
     }
 
-    private void calValEntradaFeedForward(CamadaRna camadaAnterior) {
+    private void calValEntradaFeedForward(Camada camadaAnterior) {
         valorEntradaTotal = 0.0;
         for (int i = 0; i < camadaAnterior.getSizeListNeuronios(); i++) {
             valorEntradaTotal += camadaAnterior.getNeuron(i).getValorSaida()
@@ -80,15 +82,17 @@ public class NeuronioRna {
     /**
      * Caso a rede esteja configurarda para treino usando a técnica de dropout
      */
-    public void feedForwardDropout(CamadaRna camadaAnterior, boolean ultimaCamada, boolean emTreinamento) {
+    public void feedForwardDropout(Camada camadaAnterior, boolean ultimaCamada, boolean emTreinamento) {
         if (emTreinamento) {
             if (ultimaCamada) {
                 calValEntradaFeedForward(camadaAnterior);
-                valorSaida = FuncaoAtivacao.funcAtivacaoSaida(valorEntradaTotal);
+                //             valorSaida = FuncaoAtivacao.funcAtivacaoSaida(valorEntradaTotal);
+                valorSaida = rna.getGetFuncaoAtivacaoSaida().calc(valorEntradaTotal);
             } else {
                 if (random.nextBoolean()) {
                     calValEntradaFeedForward(camadaAnterior);
-                    valorSaida = FuncaoAtivacao.funcAtivacao(valorEntradaTotal);
+                    //valorSaida = FuncaoAtivacao.funcAtivacao(valorEntradaTotal);
+                    valorSaida = rna.getFuncaoAtivacaoInterna().calc(valorEntradaTotal);
                     dropped = false;
                 } else {
                     dropped = true;
@@ -98,9 +102,11 @@ public class NeuronioRna {
         } else {
             calValEntradaFeedForward(camadaAnterior);
             if (ultimaCamada) {
-                valorSaida = (FuncaoAtivacao.funcAtivacaoSaida(valorEntradaTotal) / 2); // Ao usar deve-se utilizar a metade do valor. Técnica de dropout
+                //  valorSaida = (FuncaoAtivacao.funcAtivacaoSaida(valorEntradaTotal) / 2); // Ao usar deve-se utilizar a metade do valor. Técnica de dropout
+                valorSaida = (rna.getGetFuncaoAtivacaoSaida().calc(valorEntradaTotal) / 2); // Ao usar deve-se utilizar a metade do valor. Técnica de dropout
             } else {
-                valorSaida = (FuncaoAtivacao.funcAtivacao(valorEntradaTotal) / 2);
+                //  valorSaida = (FuncaoAtivacao.funcAtivacao(valorEntradaTotal) / 2);
+                valorSaida = (rna.getFuncaoAtivacaoInterna().calc(valorEntradaTotal) / 2);
             }
         }
     }
@@ -114,7 +120,8 @@ public class NeuronioRna {
      * @param valorAlvo valor que deveria ser o "correto", utilizado para o cálculo do erro.
      */
     public void calculaGradienteSaida(double valorAlvo) {
-        gradient = (valorAlvo - valorSaida) * FuncaoAtivacao.funcAtivacaoDerivadaSaida(valorEntradaTotal);
+        //    gradient = (valorAlvo - valorSaida) * FuncaoAtivacao.funcAtivacaoDerivadaSaida(valorEntradaTotal);
+        gradient = (valorAlvo - valorSaida) * rna.getGetFuncaoAtivacaoSaida().calcDerivada(valorEntradaTotal);
     }
 
     /**
@@ -128,13 +135,14 @@ public class NeuronioRna {
      * ativação com o valor que este neurônio recebeu de entrada (valor antes de
      * ser aplicada a Tf)
      */
-    public void calculaGradiente(CamadaRna nextLayer) {
+    public void calculaGradiente(Camada nextLayer) {
         gradient = 0;
         if (!dropped) {
             for (int neuronio = 0; neuronio < (nextLayer.getSizeListNeuronios() - 1); neuronio++) {
                 gradient += (outputConnections.get(neuronio).getPeso()
                         * nextLayer.getNeuron(neuronio).getGradient()
-                        * FuncaoAtivacao.funcAtivacaoDerivada(valorEntradaTotal));
+                        //   * FuncaoAtivacao.funcAtivacaoDerivada(valorEntradaTotal));
+                        * rna.getFuncaoAtivacaoInterna().calcDerivada(valorEntradaTotal));
             }
         }
     }
@@ -146,16 +154,17 @@ public class NeuronioRna {
      *                  está. Os pesos a serem atualizados estão contidos nela (pesos das
      *                  conexões de grasaída dos neurônios)
      */
-    public void atualizaPesos(CamadaRna prevLayer) {
+    public void atualizaPesos(Camada prevLayer) {
         for (int neuronNum = 0; neuronNum < prevLayer.getSizeListNeuronios(); neuronNum++) {
-            NeuronioRna prevNuron = prevLayer.getNeuron(neuronNum);
+            Neuronio prevNuron = prevLayer.getNeuron(neuronNum);
             double oldDetaWeight = prevNuron.getConnection(meuIndex).getDeltaPeso();
             /*
              * O novo peso é composto do peso anterior + saída do neurônio da cvamada anterior*taxa de apendizado* gradiente do neurônio em questão
             (o que os pesos apontam) + momentum* delta da última variação dos pesos
              */
             //  double newDeltaWeight = eta * prevNuron.getValorSaida() * gradient + momentum * oldDetaWeight;
-            double newDeltaWeight = ConfiguracoesRna.getEta() * prevNuron.getValorSaida() * gradient + ConfiguracoesRna.getMomentum() * oldDetaWeight;
+            //double newDeltaWeight = ConfiguracoesRna.getEta() * prevNuron.getValorSaida() * gradient + ConfiguracoesRna.getMomentum() * oldDetaWeight;
+            double newDeltaWeight = rna.getTaxaAprendizado() * prevNuron.getValorSaida() * gradient + rna.getMomentum() * oldDetaWeight;
             prevNuron.getConnection(meuIndex).setDeltaPeso(newDeltaWeight);
             prevNuron.getConnection(meuIndex).updateWeight(newDeltaWeight);
         }
@@ -169,7 +178,7 @@ public class NeuronioRna {
         this.valorSaida = valorSaida;
     }
 
-    public List<ConexaoPesosRna> getOutputConnections() {
+    public List<Pesos> getOutputConnections() {
         return outputConnections;
     }
 

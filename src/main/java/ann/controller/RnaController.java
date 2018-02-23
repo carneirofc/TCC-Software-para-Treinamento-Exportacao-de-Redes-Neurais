@@ -7,8 +7,6 @@ import data.Operacoes;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleLongProperty;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import main.Ctrl;
 import main.Recursos;
 import main.config.ConfigGeral;
@@ -66,7 +64,6 @@ public class RnaController implements Runnable {
         try {
             treinoSetup();
             logSetup();
-            //  Worker.threadSetup(rna);
             treinar();
             // TODO: atualizar a interface
         } catch (Exception ex) {
@@ -117,12 +114,12 @@ public class RnaController implements Runnable {
                 }
                 erroEpocaTeste = rna.getErroEpoca();
                 // Critério de parada
-                if ((rna.getEpochAtual() > ConfiguracoesRna.getMAX_EPOCH()) || (erroEpocaTeste < ConfiguracoesRna.getTARGET_ERROR())) {
+                if ((rna.getEpocaAtual() > ConfiguracoesRna.getMAX_EPOCH()) || (erroEpocaTeste < ConfiguracoesRna.getTARGET_ERROR())) {
                     Ctrl.setRnaEmExecucao(false);
                 }
             } else {// Sem usar os dados de teste
                 // Critério de parada
-                if ((rna.getEpochAtual() > ConfiguracoesRna.getMAX_EPOCH()) || (erroEpocaTreino < ConfiguracoesRna.getTARGET_ERROR())) {
+                if ((rna.getEpocaAtual() > ConfiguracoesRna.getMAX_EPOCH()) || (erroEpocaTreino < ConfiguracoesRna.getTARGET_ERROR())) {
                     Ctrl.setRnaEmExecucao(false);
                 }
             }
@@ -132,7 +129,7 @@ public class RnaController implements Runnable {
             // Escreve no log caso necessário ....
             if (Ctrl.isLogErroEpoca()) {
                 try {
-                    dosLogErro.write((rna.getEpochAtual() + "," + erroEpocaTreino + "\n").getBytes(Recursos.CHARSET_PADRAO));
+                    dosLogErro.write((rna.getEpocaAtual() + "," + erroEpocaTreino + "\n").getBytes(Recursos.CHARSET_PADRAO));
                 } catch (IOException e) {
                 }
             }
@@ -144,13 +141,13 @@ public class RnaController implements Runnable {
                 Platform.runLater(() -> {
 
                     ((SimpleDoubleProperty) ValoresDisplay.obsTreinoErro).set(erroEpocaTreino);
-                    ((SimpleLongProperty) ValoresDisplay.obsEpocaAtual).set(rna.getEpochAtual());
+                    ((SimpleLongProperty) ValoresDisplay.obsEpocaAtual).set(rna.getEpocaAtual());
 
-                    Principal.getGraficoLinha().addPonto(new Ponto(rna.getEpochAtual(), erroEpocaTreino), Principal.getGraficoLinha().sTreino);
+                    Principal.getGraficoLinha().addPonto(new Ponto(rna.getEpocaAtual(), erroEpocaTreino), Principal.getGraficoLinha().sTreino);
 
                     if (Ctrl.isDadosTesteCarregados() && Ctrl.isUsarDadosTesteTreino()) {
                         ((SimpleDoubleProperty) ValoresDisplay.obsTreinoErroTeste).set(erroEpocaTeste);
-                        Principal.getGraficoLinha().addPonto(new Ponto(rna.getEpochAtual(), erroEpocaTeste), Principal.getGraficoLinha().sTeste);
+                        Principal.getGraficoLinha().addPonto(new Ponto(rna.getEpocaAtual(), erroEpocaTeste), Principal.getGraficoLinha().sTeste);
                     }
                 });
             }
@@ -164,13 +161,13 @@ public class RnaController implements Runnable {
         // Atualiza a interface gráfica ...
         Platform.runLater(() -> {
             if (Ctrl.isUsarDadosTesteTreino()) {
-                Principal.getGraficoLinha().addPonto(new Ponto(rna.getEpochAtual(), erroEpocaTeste), Principal.getGraficoLinha().sTeste);
+                Principal.getGraficoLinha().addPonto(new Ponto(rna.getEpocaAtual(), erroEpocaTeste), Principal.getGraficoLinha().sTeste);
                 ((SimpleDoubleProperty) ValoresDisplay.obsTreinoErroTeste).set(erroEpocaTeste);
             }
-            Principal.getGraficoLinha().addPonto(new Ponto(rna.getEpochAtual(), erroEpocaTreino), Principal.getGraficoLinha().sTreino);
+            Principal.getGraficoLinha().addPonto(new Ponto(rna.getEpocaAtual(), erroEpocaTreino), Principal.getGraficoLinha().sTreino);
             ((SimpleDoubleProperty) ValoresDisplay.obsTreinoErro).set(erroEpocaTreino);
             ((SimpleDoubleProperty) ValoresDisplay.obsTreinoTempoDeTreinamento).set(Operacoes.nanoParaNormal(tTreino));
-            ((SimpleLongProperty) ValoresDisplay.obsEpocaAtual).set(rna.getEpochAtual());
+            ((SimpleLongProperty) ValoresDisplay.obsEpocaAtual).set(rna.getEpocaAtual());
             Utilidade.notification("Treinamento Concluído");
             //Janela.dialogo(,"Treinamento Concluído","Processo de treinamento concluído com sucesso.", Alert.AlertType.INFORMATION);
         });
@@ -194,7 +191,7 @@ public class RnaController implements Runnable {
 
         //TODO: Aqui estava atribuindo os valores do usuário para a classe que gerencia tais informações de verdade. ... Implementar isso de uma maneira mais refinada chamanado uma função no momento de salvar estes dados...
         if (ConfigGeral.getConfigGeralAtual().getRnaAtual() == null) {
-            ConfigGeral.getConfigGeralAtual().setRnaAtual(new Rna(ConfiguracoesRna.getTolopogiaArray(), Ctrl.isRnaDropout()));
+            ConfigGeral.getConfigGeralAtual().setRnaAtual(new Rna(ConfiguracoesRna.getTolopogiaArray()));
             Operacoes.findMinMaxVals(
                     ConjuntoDados.dadosTreinamento.getDadosSaida(),
                     ConjuntoDados.dadosTreinamento.getDadosEntrada(),
@@ -208,6 +205,7 @@ public class RnaController implements Runnable {
             ConjuntoDados.dadosTeste.normalizaDados();
         }
         rna = ConfigGeral.getConfigGeralAtual().getRnaAtual();
+        // rna.configuraParametros();
         //
         System.out.println(ConfigGeral.getConfigGeralAtual().toString());
         System.out.println();
@@ -290,8 +288,7 @@ public class RnaController implements Runnable {
             throw new ExceptionPlanejada("A rede não foi treinada.");
         if (rna == null)
             throw new ExceptionPlanejada("A rede não foi incializada.");
-        Thread t = new Thread(new FFManual(rna, valorEntrada));
-        t.start();
+        new Thread(new FFManual(rna, valorEntrada)).start();
     }
 
     @Contract(pure = true)
