@@ -4,7 +4,6 @@ import ann.detalhes.Rna;
 import data.Operacoes;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public enum FuncaoTipo {
     TANGENTE_HIPERBOLICA(
@@ -61,18 +60,9 @@ public enum FuncaoTipo {
         return calculoFuncaoAtivacaoDerivada.calc(x, termoLinear);
     }
 
-    @Nullable
-    public static FuncaoTipo getPorCod(int i) {
-        for (FuncaoTipo funcaoTipo : values()) {
-            if (funcaoTipo.ordinal() == i)
-                return funcaoTipo;
-        }
-        return null;
-    }
-
     @NotNull
-    public String getNomeFuncao() {
-        return Integer.toString(ordinal()) + " : " + nome;
+    public String getNome() {
+        return nome;
     }
 
     @Contract(pure = true)

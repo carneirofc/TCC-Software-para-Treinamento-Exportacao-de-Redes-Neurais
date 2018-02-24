@@ -2,6 +2,7 @@ package main.gui;
 
 import ann.funcao_ativacao.FuncaoTipo;
 import ann.geral.DecaimentoTaxaAprendizado;
+import ann.geral.FuncaoDecaimento;
 import javafx.beans.property.*;
 import javafx.beans.value.*;
 import javafx.collections.FXCollections;
@@ -24,6 +25,7 @@ public class ValoresDisplay {
     // Provenientes de ConfigGeral
     public static ObservableDoubleValue obsMomentum = new SimpleDoubleProperty();
     public static ObservableDoubleValue obsTaxaAprendizado = new SimpleDoubleProperty();
+    public static ObservableDoubleValue obsTaxaAprendizadoAtual = new SimpleDoubleProperty();
     public static ObservableDoubleValue obsTermoLinear = new SimpleDoubleProperty();
     public static ObservableDoubleValue obsFaixaPesoInicial = new SimpleDoubleProperty();
     public static ObservableDoubleValue obsErroDesejado = new SimpleDoubleProperty();
@@ -61,14 +63,21 @@ public class ValoresDisplay {
     public static ObservableBooleanValue obsMostrarTexto = Ctrl.guiMostrarTextoProperty();
     public static ObservableBooleanValue obsMostrarGrafico = Ctrl.guiMostrarGraficoProperty();
     public static ObservableList<FuncaoTipo> obsFuncaoAtivacaoPossiveis = FXCollections.observableArrayList();
-    public static ObservableList<DecaimentoTaxaAprendizado> obsFuncaoDecaimentoPosssiveis = FXCollections.observableArrayList();
+    public static ObservableList<FuncaoDecaimento> obsFuncaoDecaimentoPosssiveis = FXCollections.observableArrayList();
 
-    public static void atualizaFuncaoAtivacao(FuncaoTipo funcaoTipo, boolean interna) {
-        if (funcaoTipo == null) {return;}
+    public static void inivializaLists() {
         if (obsFuncaoAtivacaoPossiveis.isEmpty()) {
             obsFuncaoAtivacaoPossiveis.addAll(Arrays.asList(FuncaoTipo.values()));
         }
+        if (obsFuncaoDecaimentoPosssiveis.isEmpty()) {
+            obsFuncaoDecaimentoPosssiveis.addAll(Arrays.asList(FuncaoDecaimento.values()));
+        }
+    }
 
+    public static void atualizaFuncaoAtivacao(FuncaoTipo funcaoTipo, boolean interna) {
+        if (funcaoTipo == null) {
+            return;
+        }
         if (interna) {
             ConfigGeral.getConfigGeralAtual().setFuncaoAtivacao(funcaoTipo);
             ((SimpleStringProperty) ValoresDisplay.obsFuncaoAtivacaoInternaAtual).set(funcaoTipo.getStringFuncao(ConfigGeral.getConfigGeralAtual().getTermoLinear()));

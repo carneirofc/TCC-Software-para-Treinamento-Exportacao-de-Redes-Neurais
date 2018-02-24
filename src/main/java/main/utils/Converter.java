@@ -24,39 +24,44 @@ public class Converter {
 
     @Contract(pure = true)
     public static String doubleVectorToString(double[] d) {
-        String aux = "";
+        StringBuilder aux = new StringBuilder();
         if (d == null)
-            return aux;
+            return aux.toString();
         for (int i = 0; i < d.length; i++) {
-            aux += d[i];
+            aux.append(d[i]);
             if (i != d.length - 1) {
-                aux += ";";
+                aux.append(";");
             }
         }
-        return aux;
+        return aux.toString();
     }
 
     @Contract(pure = true)
     public static String intVectorToString(int[] d) {
-        String aux = "";
+        StringBuilder aux = new StringBuilder();
         if (d == null)
-            return aux;
+            return aux.toString();
         for (int i = 0; i < d.length; i++) {
-            aux += d[i];
+            aux.append(d[i]);
             if (i != d.length - 1) {
-                aux += ";";
+                aux.append(";");
             }
         }
-        return aux;
+        return aux.toString();
     }
 
     @NotNull
     public static int[] stringToIntVector(String string) {
+        if (string == null) {
+            return new int[]{};
+        }
+        if (string.isEmpty()) {
+            return new int[]{};
+        }
+        string = string.replaceAll("\\s{2,}", " ");
+        string = string.trim().replaceAll("[\\s]", ";");
         string = string.trim().replaceAll(",|-", ";");
-        if (string == null)
-            return new int[]{};
-        if (string.isEmpty())
-            return new int[]{};
+
         string = string.replaceAll("[^0-9;]", "");
         String s[] = string.split(";");
         int is[] = new int[s.length];
@@ -71,8 +76,6 @@ public class Converter {
     public static double[] stringToDoubleVector(String string) throws ExceptionPlanejada {
         try {
             string = string.trim();
-            if (string == null)
-                return new double[]{};
             if (string.isEmpty())
                 return new double[]{};
             char[] chars = string.toCharArray();

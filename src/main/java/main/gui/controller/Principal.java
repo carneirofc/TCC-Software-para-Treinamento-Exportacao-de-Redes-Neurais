@@ -2,6 +2,8 @@ package main.gui.controller;
 
 import ann.controller.RnaController;
 import ann.funcao_ativacao.FuncaoTipo;
+import ann.geral.FuncaoDecaimento;
+import ann.geral.Topologia;
 import com.jfoenix.controls.*;
 import data.properties.read.ManipuladorProperties;
 import data.txt.write.Ccode;
@@ -44,9 +46,13 @@ import java.util.ResourceBundle;
 
 public class Principal implements Initializable {
 
-    public MenuItem miSobre;
-    public MenuItem miFaq;
+    @FXML
+    private MenuItem miSobre;
+    @FXML
+    private MenuItem miFaq;
     public StackPane stackRoot;
+    @FXML
+    private Label lblTaxaAprendizadoAtual;
     @FXML
     private MenuItem miTreinar;
     @FXML
@@ -470,11 +476,15 @@ public class Principal implements Initializable {
                 new double[]{0},
                 new double[]{0},
                 new double[]{0},
-                new double[]{0}
+                new double[]{0},
+                0,
+                0,
+                FuncaoDecaimento.NENHUM
         );
         ConfigGeral.setConfigGeralAtual(
                 configGeralDTO
         );
+        Topologia.configuraTolopogia();
 
         tabTreino.setContent(GRAFICO_LINHA.getLineChart());
 
@@ -487,6 +497,7 @@ public class Principal implements Initializable {
         lblMomentum.textProperty().bind(Bindings.format("%e", ValoresDisplay.obsMomentum));
         lblTermoLinear.textProperty().bind(Bindings.format("%e", ValoresDisplay.obsTermoLinear));
         lblTaxaAprendizado.textProperty().bind(Bindings.format("%e", ValoresDisplay.obsTaxaAprendizado));
+        lblTaxaAprendizadoAtual.textProperty().bind(Bindings.format("%e", ValoresDisplay.obsTaxaAprendizadoAtual));
         lblFaixaPeso.textProperty().bind(Bindings.format("%f", ValoresDisplay.obsFaixaPesoInicial));
 
         lblTopologia.textProperty().bind(ValoresDisplay.obsTopologia);
@@ -546,7 +557,7 @@ public class Principal implements Initializable {
         tooltip.textProperty().bind(Bindings.format("%.4f s", tSlider.valueProperty()));
         tSlider.setTooltip(tooltip);
 
-        miSobre.setOnAction(event ->Janela.sobre());
+        miSobre.setOnAction(event -> Janela.sobre());
         miFaq.setOnAction(event -> Utilidade.aindaNaoImplementado());
 
         miLogErroEpoca.setOnAction(event -> Utilidade.aindaNaoImplementado());

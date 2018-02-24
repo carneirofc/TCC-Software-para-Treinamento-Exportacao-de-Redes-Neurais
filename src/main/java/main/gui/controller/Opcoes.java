@@ -3,6 +3,9 @@ package main.gui.controller;
 import ann.controller.RnaController;
 import ann.funcao_ativacao.FuncaoTipo;
 import ann.funcao_ativacao.FuncaoTipoStringConverter;
+import ann.geral.FuncaoDecaimento;
+import ann.geral.FuncaoDecaimentoConverter;
+import ann.geral.Topologia;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
@@ -28,6 +31,7 @@ import org.controlsfx.validation.ValidationResult;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
+import java.io.ObjectInputFilter;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -37,9 +41,18 @@ import java.util.regex.Pattern;
 public class Opcoes implements Initializable {
 
     @FXML
+    private JFXTextField tfGanhoDecaimento;
+    @FXML
+    private Label lblTaxaDecaimento;
+    @FXML
+    private JFXTextField tfPassoDecaimento;
+    @FXML
+    private Label lblPassoDecaimento;
+
+    @FXML
     private JFXTextField tfTaxaDecaimento;
     @FXML
-    private JFXComboBox cbFuncaoDecaimento;
+    private JFXComboBox<FuncaoDecaimento> cbFuncaoDecaimento;
     @FXML
     private Label lblFuncaoDecaimento;
     @FXML
@@ -128,7 +141,9 @@ public class Opcoes implements Initializable {
 
             ValoresDisplay.atualizaFuncaoAtivacao(cbFuncaoAtivacao.getValue(), true);
             ValoresDisplay.atualizaFuncaoAtivacao(cbFuncAtivacaoSaida.getValue(), false);
-
+            if (cbFuncaoDecaimento.getValue() != null) {
+                ConfigGeral.getConfigGeralAtual().setFuncaoDecaimento(cbFuncaoDecaimento.getValue());
+            }
             if (!tfEpocaMaxima.getText().isEmpty())
                 ConfigGeral.getConfigGeralAtual().setEpocaMaxima(NumberFormat.getIntegerInstance().parse(tfEpocaMaxima.getText()).intValue());
             if (!tfErroDesejado.getText().isEmpty()) {
@@ -146,19 +161,27 @@ public class Opcoes implements Initializable {
             if (!tfPesoInicial.getText().isEmpty()) {
                 ConfigGeral.getConfigGeralAtual().setFaixaPesos(ValoresDisplay.NUMBER_FORMAT_NOTACAO_CIENTIFICA.parse(tfPesoInicial.getText()).doubleValue());
             }
+            if (!tfGanhoDecaimento.getText().isEmpty()) {
+                ConfigGeral.getConfigGeralAtual().setTaxaDecaimentoGanho(DecimalFormat.getInstance().parse(tfGanhoDecaimento.getText()).doubleValue());
+            }
+            if (!tfPassoDecaimento.getText().isEmpty()) {
+                ConfigGeral.getConfigGeralAtual().setTaxaDecaimentoPasso(NumberFormat.getIntegerInstance().parse(tfPassoDecaimento.getText()).doubleValue());
+            }
             //TODO: POG!
             if (!tfTopologia.getText().isEmpty()) {
-                String hiddenTopology = tfTopologia.getText();
-                hiddenTopology = hiddenTopology.trim();
-                if (!hiddenTopology.isEmpty()) {
-                    hiddenTopology = hiddenTopology.replaceAll(Pattern.quote(".01234567890E-4;"), "");
-                    String s[] = hiddenTopology.split(";");
-                    int is[] = new int[s.length];
-                    for (int i = 0; i < s.length; i++) {
-                        is[i] = Integer.parseInt(s[i]);
-                    }
-                    ConfigGeral.getConfigGeralAtual().setTopologiaOculta(is);
-                }
+                ConfigGeral.getConfigGeralAtual().setTopologiaOculta(Converter.stringToIntVector(tfTopologia.getText()));
+                Topologia.configuraTolopogia();
+//                String hiddenTopology = tfTopologia.getText();
+//                hiddenTopology = hiddenTopology.trim();
+//                if (!hiddenTopology.isEmpty()) {
+//                    hiddenTopology = hiddenTopology.replaceAll(Pattern.quote(".01234567890E-4;"), "");
+//                    String s[] = hiddenTopology.split(";");
+//                    int is[] = new int[s.length];
+//                    for (int i = 0; i < s.length; i++) {
+//                        is[i] = Integer.parseInt(s[i]);
+//                    }
+//                    ConfigGeral.getConfigGeralAtual().setTopologiaOculta(is);
+//                }
             }
             ConfigGeral.setConfigGeralAtual();
             stage.close();
@@ -174,26 +197,13 @@ public class Opcoes implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Callback<ListView<FuncaoTipo>, ListCell<FuncaoTipo>> cellFactoryFuncaoTipo = new Callback<>() {
-            @Override
-            public ListCell<FuncaoTipo> call(ListView<FuncaoTipo> param) {
-                return new ListCell<>() {
-                    @Override
-                    protected void updateItem(FuncaoTipo item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (item == null) {
-                            setText(null);
-                        } else {
-                            setText(item.getStringFuncao(ConfigGeral.getConfigGeralAtual().getTermoLinear()));
-                        }
-                    }
-                };
-            }
-        };
-        //cbFuncaoAtivacao.setCellFactory(cellFactoryFuncaoTipo);
-        //cbFuncAtivacaoSaida.setCellFactory(cellFactoryFuncaoTipo);
+        cbFuncaoDecaimento.setConverter(new FuncaoDecaimentoConverter());
         cbFuncaoAtivacao.setConverter(new FuncaoTipoStringConverter());
         cbFuncAtivacaoSaida.setConverter(new FuncaoTipoStringConverter());
+
+        cbFuncaoDecaimento.getSelectionModel().selectFirst();
+        cbFuncaoDecaimento.setItems(ValoresDisplay.obsFuncaoDecaimentoPosssiveis);
+
 
         cbFuncaoAtivacao.getSelectionModel().selectFirst();
         cbFuncaoAtivacao.setItems(ValoresDisplay.obsFuncaoAtivacaoPossiveis);
@@ -206,6 +216,10 @@ public class Opcoes implements Initializable {
         cbLogTempoCamada.setSelected(Ctrl.logTempoTreinoCamadaProperty().get());
         cbLogErroEpoca.setSelected(Ctrl.logErroEpocaProperty().get());
 
+        lblPassoDecaimento.setText(String.valueOf(ConfigGeral.getConfigGeralAtual().getTaxaDecaimentoPasso()));
+        lblTaxaDecaimento.setText(String.valueOf(ConfigGeral.getConfigGeralAtual().getTaxaDecaimentoGanho()));
+        lblFuncaoDecaimento.setText(ConfigGeral.getConfigGeralAtual().getFuncaoDecaimento().nome);
+
         lblFuncaoAtiv.textProperty().bind(ValoresDisplay.obsFuncaoAtivacaoInternaAtual);
         lblFuncaAtivSaida.textProperty().bind(ValoresDisplay.obsFuncaoAtivacaoSaidaAtual);
         lblErroDesejado.textProperty().bind(Bindings.format("%e", ValoresDisplay.obsErroDesejado));
@@ -216,12 +230,15 @@ public class Opcoes implements Initializable {
         lblEpocaMax.textProperty().bind(Bindings.format("%d", ValoresDisplay.obsEpocaMaxima));
         lblTermoLinear.textProperty().bind(Bindings.format("%e", ValoresDisplay.obsTermoLinear));
 
+        tfGanhoDecaimento.setTextFormatter(new TextFormatter<>(new FormatStringConverter<>(DecimalFormat.getInstance())));
+        tfPassoDecaimento.setTextFormatter(new TextFormatter<>(new FormatStringConverter<>(NumberFormat.getIntegerInstance())));
         tfEpocaMaxima.setTextFormatter(new TextFormatter<>(new FormatStringConverter<>(NumberFormat.getIntegerInstance())));
         tfErroDesejado.setTextFormatter(new TextFormatter<>(new FormatStringConverter<>(ValoresDisplay.NUMBER_FORMAT_NOTACAO_CIENTIFICA)));
         tfTermoLinear.setTextFormatter(new TextFormatter<>(new FormatStringConverter<>(ValoresDisplay.NUMBER_FORMAT_NOTACAO_CIENTIFICA)));
         tfTaxaAprendizado.setTextFormatter(new TextFormatter<>(new FormatStringConverter<>(ValoresDisplay.NUMBER_FORMAT_NOTACAO_CIENTIFICA)));
         tfMomentum.setTextFormatter(new TextFormatter<>(new FormatStringConverter<>(ValoresDisplay.NUMBER_FORMAT_NOTACAO_CIENTIFICA)));
         tfPesoInicial.setTextFormatter(new TextFormatter<>(new FormatStringConverter<>(NumberFormat.getInstance())));
+
         tfTopologia.setTextFormatter(new TextFormatter<>(new StringConverter<String>() {
             @Override
             public String toString(String object) {

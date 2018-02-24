@@ -3,11 +3,15 @@ package ann.geral;
 import data.ConjuntoDados;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.util.StringConverter;
+import main.config.ConfigGeral;
 import main.gui.ValoresDisplay;
+import main.utils.Converter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Claudio
@@ -23,70 +27,34 @@ public class Topologia {
      */
     private static int[] tolopogiaArray;
 
-    private static SimpleStringProperty topologiaEscondida = (SimpleStringProperty) ValoresDisplay.obsTopologiaEscondida;// = new SimpleStringProperty();
-
-    // TODO: Essa maneira de atualizar a topologiua não ideal, mudar para fica rmais fácil de trabalhar ....
-    public static void setHiddenTopology(String novaTopologiaEscondida) {
-        Platform.runLater(() -> {
-            Topologia.topologiaEscondida.set(novaTopologiaEscondida);
-            ((SimpleStringProperty) ValoresDisplay.obsTopologia).set(Integer.toString(ConjuntoDados.dadosTreinamento.getNeuroniosEntradaQtd()).concat(";").concat(novaTopologiaEscondida).concat(";").concat(Integer.toString(ConjuntoDados.dadosTreinamento.getNeuroniosSaidaQtd())));
-        });
+    public static int[] getTolopogiaArray() {
+        return tolopogiaArray;
     }
 
-    /**
-     * TODO: isso é uma gambiarra pq estou fazendo a migração para o uso do json
-     */
-    public static void setHiddenTopology(@NotNull int[] novaTopologiaEscondida) {
-        String s = "";
-        for (int i = 0; i < novaTopologiaEscondida.length; i++) {
-            s += Integer.toString(novaTopologiaEscondida[i]);
-            if (i != novaTopologiaEscondida.length - 1)
-                s += ";";
-        }
-        setHiddenTopology(s);
-    }
-
-    /**
-     * Apenas atualiza a inteface gráfica com os valores das camadas de entrada e saída.s
-     * Provisório
-     * TODO: implementar de uma forma mais clara ...
-     */
-    public static void setHiddenTopology() {
+    private static void atulizaInterface() {
         Platform.runLater(() -> {
-            ((SimpleStringProperty) ValoresDisplay.obsTopologia).set(Integer.toString(ConjuntoDados.dadosTreinamento.getNeuroniosEntradaQtd()).concat(";").concat(topologiaEscondida.get()).concat(";").concat(Integer.toString(ConjuntoDados.dadosTreinamento.getNeuroniosSaidaQtd())));
+            ((SimpleStringProperty) ValoresDisplay.obsTopologia).set(Converter.intVectorToString(tolopogiaArray));
+            ((SimpleStringProperty) ValoresDisplay.obsTopologiaEscondida).set(Converter.intVectorToString(ConfigGeral.getConfigGeralAtual().getTopologiaOculta()));
         });
-        //  Platform.
     }
 
     /**
      * Configura a topologia da RNA baseado nas informações configuradas.
      */
-    public static void configTolopogia() {
-        String[] aux = topologiaEscondida.get().trim().split(";");
-        try {
-            List<Integer> integers = new ArrayList<>();
-            integers.add(ConjuntoDados.dadosTreinamento.getNeuroniosEntradaQtd());
-
-            for (int i = 0; i < aux.length; i++) {
-                integers.add(Math.abs(Integer.parseInt(aux[i])));
-            }
-            integers.add(ConjuntoDados.dadosTreinamento.getNeuroniosSaidaQtd());
-
-            int[] topology = new int[integers.size()];
-            for (int i = 0; i < topology.length; i++) {
-                topology[i] = integers.get(i);
-            }
-            tolopogiaArray = topology;
-        } catch (Exception e) {
-            System.out.printf("Erro ao configurar a topologia, configurações padrão serão utilizadas. 5;3");
-            e.printStackTrace();
-            int[] topology = {ConjuntoDados.dadosTreinamento.getNeuroniosEntradaQtd(), 5, 3, ConjuntoDados.dadosTreinamento.getNeuroniosSaidaQtd()};
-            Topologia.setHiddenTopology("5;3");
-            tolopogiaArray = topology;
+    public static void configuraTolopogia() {
+        int[] aux = ConfigGeral.getConfigGeralAtual().getTopologiaOculta();
+        List<Integer> integers = new ArrayList<>();
+        integers.add(ConjuntoDados.dadosTreinamento.getNeuroniosEntradaQtd());
+        for (int anAux : aux) {
+            integers.add(Math.abs(anAux));
         }
-    }
+        integers.add(ConjuntoDados.dadosTreinamento.getNeuroniosSaidaQtd());
 
-    public static int[] getTolopogiaArray() {
-        return tolopogiaArray;
+        int[] topology = new int[integers.size()];
+        for (int i = 0; i < topology.length; i++) {
+            topology[i] = integers.get(i);
+        }
+        tolopogiaArray = topology;
+        atulizaInterface();
     }
 }

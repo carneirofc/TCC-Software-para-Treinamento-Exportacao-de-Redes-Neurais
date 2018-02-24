@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import main.gui.Janela;
+import main.gui.ValoresDisplay;
 import main.gui.controller.Opcoes;
 import main.gui.controller.Principal;
 import org.jetbrains.annotations.Contract;
@@ -113,6 +114,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         //    primaryStage.initStyle(StageStyle.TRANSPARENT);
         stagePrincipal = primaryStage;
+        ValoresDisplay.inivializaLists();
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(ClassLoader.getSystemClassLoader().getResource(Recursos.FXML_PRINCIPAL));
             Parent root = fxmlLoader.load();
@@ -138,7 +140,7 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-        FuncaoTipo ad = FuncaoTipo.TANGENTE_HIPERBOLICA;
+     //   FuncaoTipo ad = FuncaoTipo.TANGENTE_HIPERBOLICA;
         Locale.setDefault(Locale.UK);
         launch(args);
     }

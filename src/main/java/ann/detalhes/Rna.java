@@ -1,8 +1,8 @@
 package ann.detalhes;
 
 import ann.controller.RnaController;
+import ann.geral.FuncaoDecaimento;
 import ann.geral.Topologia;
-import ann.geral.DecaimentoTaxaAprendizado;
 import ann.funcao_ativacao.FuncaoTipo;
 import data.ConjuntoDados;
 import main.Ctrl;
@@ -32,7 +32,7 @@ public class Rna {
     private final double termoLinear;
     private final FuncaoTipo funcaoAtivacaoInterna;
     private final FuncaoTipo getFuncaoAtivacaoSaida;
-    private final DecaimentoTaxaAprendizado decaimentoTaxaAprendizado;
+    private final FuncaoDecaimento decaimentoTaxaAprendizado;
     private final int[] topologia;
     private final List<Camada> camadas = new ArrayList<>();
 
@@ -41,6 +41,9 @@ public class Rna {
     private double taxaAprendizado;
     private double taxaAprendizadoInicial;
     private double momentum;
+
+    private double taxaDecaimentoPasso;
+    private double taxaDecaimentoGanho;
 
     private Double erroIteracao = 0.0;
     private double erroEpoca = 0;
@@ -61,17 +64,18 @@ public class Rna {
                 ConfigGeral.getConfigGeralAtual().getFuncaoAtivacaoInterno(),
                 ConfigGeral.getConfigGeralAtual().getFuncaoAtivacaoSaida(),
                 Topologia.getTolopogiaArray(),
-                (taxaAprendizado, param1, param2, param3) -> ((param1 % param2 == 0) ? (taxaAprendizado / 2) : (taxaAprendizado)));
+                ConfigGeral.getConfigGeralAtual().getFuncaoDecaimento())
+        ;
         Ctrl.setRnaTreinada(false);
         inicializaLayers(topologia);
         configuraParametros();
     }
 
     private void atualizaEta() {
-        taxaAprendizado = decaimentoTaxaAprendizado.calc(taxaAprendizado, epocaAtual, 1000, 0);
+        taxaAprendizado = decaimentoTaxaAprendizado.getNovoEta().calc(taxaAprendizado, taxaAprendizadoInicial, epocaAtual, taxaDecaimentoPasso, taxaDecaimentoGanho);
     }
 
-    private Rna(double faixaInicialPesos, boolean dropout, double termoLinear, FuncaoTipo funcaoAtivacaoInterna, FuncaoTipo getFuncaoAtivacaoSaida, int[] topologia, DecaimentoTaxaAprendizado decaimentoTaxaAprendizado) {
+    private Rna(double faixaInicialPesos, boolean dropout, double termoLinear, FuncaoTipo funcaoAtivacaoInterna, FuncaoTipo getFuncaoAtivacaoSaida, int[] topologia, FuncaoDecaimento decaimentoTaxaAprendizado) {
         this.faixaInicialPesos = faixaInicialPesos;
         this.dropout = dropout;
         this.termoLinear = termoLinear;
@@ -83,10 +87,12 @@ public class Rna {
 
     public void configuraParametros() {
         this.epocaMaxima = ConfigGeral.getConfigGeralAtual().getEpocaMaxima();
-        this.erroAlvo =  ConfigGeral.getConfigGeralAtual().getErroAlvo();
-        this.taxaAprendizadoInicial =  ConfigGeral.getConfigGeralAtual().getTaxaAprendizado();
+        this.erroAlvo = ConfigGeral.getConfigGeralAtual().getErroAlvo();
+        this.taxaAprendizadoInicial = ConfigGeral.getConfigGeralAtual().getTaxaAprendizado();
         this.taxaAprendizado = taxaAprendizadoInicial;
-        this.momentum =  ConfigGeral.getConfigGeralAtual().getMomentum();
+        this.momentum = ConfigGeral.getConfigGeralAtual().getMomentum();
+        this.taxaDecaimentoPasso = ConfigGeral.getConfigGeralAtual().getTaxaDecaimentoPasso();
+        this.taxaDecaimentoGanho = ConfigGeral.getConfigGeralAtual().getTaxaDecaimentoGanho();
     }
 
     /**
@@ -380,31 +386,6 @@ public class Rna {
         return camadas.get(0);
     }
 
-    @Override
-    public String toString() {
-        return "Rna{" +
-                "faixaInicialPesos=" + faixaInicialPesos +
-                ", dropout=" + dropout +
-                ", termoLinear=" + termoLinear +
-                ", funcaoAtivacaoInterna=" + funcaoAtivacaoInterna +
-                ", getFuncaoAtivacaoSaida=" + getFuncaoAtivacaoSaida +
-                ", decaimentoTaxaAprendizado=" + decaimentoTaxaAprendizado +
-                ", topologia=" + Arrays.toString(topologia) +
-                ", camadas=" + camadas +
-                ", epocaMaxima=" + epocaMaxima +
-                ", erroAlvo=" + erroAlvo +
-                ", taxaAprendizado=" + taxaAprendizado +
-                ", taxaAprendizadoInicial=" + taxaAprendizadoInicial +
-                ", momentum=" + momentum +
-                ", erroIteracao=" + erroIteracao +
-                ", erroEpoca=" + erroEpoca +
-                ", epocaAtual=" + epocaAtual +
-                '}';
-    }
-
-    public DecaimentoTaxaAprendizado getDecaimentoTaxaAprendizado() {
-        return decaimentoTaxaAprendizado;
-    }
 
     public double getTaxaAprendizadoInicial() {
         return taxaAprendizadoInicial;
@@ -412,10 +393,6 @@ public class Rna {
 
     public double getFaixaInicialPesos() {
         return faixaInicialPesos;
-    }
-
-    public boolean isDropout() {
-        return dropout;
     }
 
     public double getTermoLinear() {
@@ -450,7 +427,27 @@ public class Rna {
         return momentum;
     }
 
-    public Double getErroIteracao() {
-        return erroIteracao;
+    @Override
+    public String toString() {
+        return "Rna{" +
+                "faixaInicialPesos=" + faixaInicialPesos +
+                ", dropout=" + dropout +
+                ", termoLinear=" + termoLinear +
+                ", funcaoAtivacaoInterna=" + funcaoAtivacaoInterna +
+                ", getFuncaoAtivacaoSaida=" + getFuncaoAtivacaoSaida +
+                ", decaimentoTaxaAprendizado=" + decaimentoTaxaAprendizado +
+                ", topologia=" + Arrays.toString(topologia) +
+                ", camadas=" + camadas +
+                ", epocaMaxima=" + epocaMaxima +
+                ", erroAlvo=" + erroAlvo +
+                ", taxaAprendizado=" + taxaAprendizado +
+                ", taxaAprendizadoInicial=" + taxaAprendizadoInicial +
+                ", momentum=" + momentum +
+                ", taxaDecaimentoPasso=" + taxaDecaimentoPasso +
+                ", taxaDecaimentoGanho=" + taxaDecaimentoGanho +
+                ", erroIteracao=" + erroIteracao +
+                ", erroEpoca=" + erroEpoca +
+                ", epocaAtual=" + epocaAtual +
+                '}';
     }
 }

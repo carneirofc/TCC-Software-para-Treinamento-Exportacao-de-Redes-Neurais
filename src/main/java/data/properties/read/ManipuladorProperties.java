@@ -36,12 +36,8 @@ public class ManipuladorProperties {
         ConjuntoDados.setColunasEntrada(Utilidade.getInt(Utilidade.getStringSeparadorEspaco(dataProperties.getProperty("colunasEntrada"))));
         ConjuntoDados.setColunasSaida(Utilidade.getInt(Utilidade.getStringSeparadorEspaco(dataProperties.getProperty("colunasSaida"))));
 
-        //DadosRna.setColunasEntrada();
-        //DadosRna.setColunasSaida(Utilidade.getInt(Utilidade.getStringSeparadorEspaco(dataProperties.getProperty("colunasSaida"))));
-
-      //  DadosRna.setColunasEntradaQtd(DadosRna.getColunasEntrada().size());
-       // DadosRna.setColunasSaidaQtd(DadosRna.getColunasSaida().size());
-        Topologia.setHiddenTopology();
+        //Topologia.setHiddenTopology();
+        Topologia.configuraTolopogia();
     }
 
     /**
@@ -64,11 +60,14 @@ public class ManipuladorProperties {
 
         Ctrl.setDadosTreinoCarregados(false);
         Ctrl.setDadosTesteCarregados(false);
+
         Ctrl.setPropertiesDadosCarregados(true);
 
         Platform.runLater(() -> {
             try {
                 ((SimpleStringProperty) ValoresDisplay.obsPropertiesCaminho).set(file.getCanonicalPath());
+                ((SimpleStringProperty) ValoresDisplay.obsDadosTesteCaminho).set("");
+                ((SimpleStringProperty) ValoresDisplay.obsDadosTreinoCaminho).set("");
             } catch (IOException e) {
                 e.printStackTrace();
             }

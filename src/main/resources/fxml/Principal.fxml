@@ -16,7 +16,6 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.input.KeyCodeCombination?>
@@ -33,7 +32,7 @@
 
 <StackPane fx:id="stackRoot" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.gui.controller.Principal">
    <children>
-      <AnchorPane>
+      <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1150.0">
          <children>
             <MenuBar prefHeight="15.0" prefWidth="1187.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <menus>
@@ -92,7 +91,7 @@
             <VBox alignment="CENTER" layoutY="37.0" maxHeight="55.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="37.0">
                <children>
                   <Separator prefWidth="200.0" />
-                  <Label alignment="CENTER" styleClass="text-title" stylesheets="@../css/Estilo.css" text="Software para Treinamento de Redes Neurais" textAlignment="CENTER">
+                  <Label alignment="CENTER" styleClass="text-title"  text="Software para Treinamento de Redes Neurais" textAlignment="CENTER">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
@@ -102,7 +101,7 @@
                   <Separator prefWidth="200.0" />
                </children>
             </VBox>
-            <GridPane alignment="TOP_CENTER" hgap="15.0" layoutX="10.0" layoutY="115.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="115.0">
+            <GridPane alignment="TOP_CENTER" hgap="15.0" layoutX="10.0" layoutY="115.0" prefHeight="574.0" prefWidth="1177.0" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="115.0">
                <columnConstraints>
                   <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="528.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="820.0" minWidth="10.0" prefWidth="634.0" />
@@ -127,207 +126,167 @@
                            <padding>
                               <Insets bottom="5.0" top="10.0" />
                            </padding></JFXTextArea>
-                        <HBox alignment="TOP_CENTER">
+                        <AnchorPane prefHeight="340.0" prefWidth="634.0">
                            <children>
-                              <VBox prefWidth="390.0" spacing="10.0">
-                                 <children>
-                                    <HBox alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT" onDragDropped="#dragDropPropDados" onDragOver="#handleDragOver" spacing="10.0">
-                                       <children>
-                                          <JFXButton ellipsisString="" mnemonicParsing="false" onAction="#carregarPropertiesTreino" style="-fx-background-radius: 5px; -fx-font-size: 12px; -fx-font-weight: bold;" text="...">
-                                             <styleClass>
-                                                <String fx:value="button" />
-                                                <String fx:value="menu-2-color" />
-                                             </styleClass>
-                                             <ripplerFill>
-                                                <LinearGradient endX="1.0" endY="1.0">
-                                                   <stops>
-                                                      <Stop color="BLACK" />
-                                                      <Stop color="WHITE" offset="1.0" />
-                                                   </stops>
-                                                </LinearGradient>
-                                             </ripplerFill>
-                                          </JFXButton>
-                                          <Label text="Propriedades dos Dados" />
-                                       </children>
-                                    </HBox>
-                                    <Label fx:id="lblProperties" prefHeight="20.0" prefWidth="307.0" text="PropriedadesPropriedadesPropriedadesPropriedadesPropriedades" />
-                                    <HBox alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT" onDragDropped="#dragDropConfig" onDragOver="#handleDragOver" spacing="10.0">
-                                       <children>
-                                          <JFXButton ellipsisString="" mnemonicParsing="false" onAction="#carregarConfig" style="-fx-background-radius: 5px; -fx-font-size: 12px; -fx-font-weight: bold;" text="...">
-                                             <styleClass>
-                                                <String fx:value="button" />
-                                                <String fx:value="menu-2-color" />
-                                             </styleClass>
-                                             <ripplerFill>
-                                                <LinearGradient endX="1.0" endY="1.0">
-                                                   <stops>
-                                                      <Stop color="BLACK" />
-                                                      <Stop color="WHITE" offset="1.0" />
-                                                   </stops>
-                                                </LinearGradient>
-                                             </ripplerFill>
-                                          </JFXButton>
-                                          <Label text="Propriedades de Configuração" />
-                                       </children>
-                                    </HBox>
-                                    <Label fx:id="lblConfig" prefHeight="20.0" prefWidth="307.0" text="Padrão Config" />
-                                    <HBox alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT" onDragDropped="#dragDropDadosTreino" onDragOver="#handleDragOver" spacing="10.0">
-                                       <children>
-                                          <JFXButton ellipsisString="" mnemonicParsing="false" onAction="#carregarDadosTreino" style="-fx-background-radius: 5px; -fx-font-size: 12px; -fx-font-weight: bold;" text="...">
-                                             <styleClass>
-                                                <String fx:value="button" />
-                                                <String fx:value="menu-2-color" />
-                                             </styleClass>
-                                             <ripplerFill>
-                                                <LinearGradient endX="1.0" endY="1.0">
-                                                   <stops>
-                                                      <Stop color="BLACK" />
-                                                      <Stop color="WHITE" offset="1.0" />
-                                                   </stops>
-                                                </LinearGradient>
-                                             </ripplerFill>
-                                          </JFXButton>
-                                          <Label text="Dados de Treino" />
-                                       </children>
-                                    </HBox>
-                                    <Label fx:id="lblDadosTreino" prefHeight="20.0" prefWidth="307.0" text="TReinTReinTReinTReinTReinTReinTReinTReinTReinTRein" />
-                                    <HBox alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT" onDragDropped="#dragDropDadosTeste" onDragOver="#handleDragOver" spacing="10.0">
-                                       <children>
-                                          <JFXButton ellipsisString="" mnemonicParsing="false" onAction="#carregarDadosTeste" style="-fx-background-radius: 5px; -fx-font-size: 12px; -fx-font-weight: bold;" text="...">
-                                             <styleClass>
-                                                <String fx:value="button" />
-                                                <String fx:value="menu-2-color" />
-                                             </styleClass>
-                                             <ripplerFill>
-                                                <LinearGradient endX="1.0" endY="1.0">
-                                                   <stops>
-                                                      <Stop color="BLACK" />
-                                                      <Stop color="WHITE" offset="1.0" />
-                                                   </stops>
-                                                </LinearGradient>
-                                             </ripplerFill>
-                                          </JFXButton>
-                                          <Label text="Dados de Teste" />
-                                       </children>
-                                    </HBox>
-                                    <Label fx:id="lblDadosTeste" prefHeight="20.0" prefWidth="307.0" />
-                                    <JFXCheckBox fx:id="cbDadoTesteParada" mnemonicParsing="false" prefHeight="21.0" prefWidth="284.0" text="Dados de Teste Como Critério de Parada" />
-                                    <JFXCheckBox fx:id="cbGerarLogEstado" disable="true" text="Gerar Arquivo de Log" />
-                                 </children>
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                              </VBox>
-                              <GridPane alignment="CENTER" hgap="5.0" maxWidth="-Infinity" prefWidth="450.0" styleClass="grid-pane" vgap="5.0" HBox.hgrow="ALWAYS">
-                                <columnConstraints>
-                                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                  <RowConstraints />
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                </rowConstraints>
-                                 <children>
-                                    <Label text="Atualização UI (s)" GridPane.rowIndex="1">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text="Topologia" GridPane.rowIndex="2">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="lblTopologia" prefWidth="150.0" text=" " textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text="Época Máxima" GridPane.rowIndex="3">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="lblEpocaMax" prefWidth="150.0" text=" " textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text="Erro RMS Desejado" GridPane.rowIndex="4">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="lblErroDesejado" prefWidth="150.0" text=" " textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text="Termo Linear" GridPane.rowIndex="5">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="lblTermoLinear" prefWidth="150.0" text=" " textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text="Taxa de Aprendizado" GridPane.rowIndex="6">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="lblTaxaAprendizado" prefWidth="150.0" text=" " textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="6">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text="Momentum" GridPane.rowIndex="7">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="lblMomentum" prefWidth="150.0" text=" " textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="7">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text="Função de Ativação" GridPane.rowIndex="8">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="lblFuncaoAtiv" GridPane.columnIndex="1" GridPane.rowIndex="8">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text="Faixa de Pesos [-w,w]" GridPane.rowIndex="9" />
-                                    <Label fx:id="lblFaixaPeso" text=" " GridPane.columnIndex="1" GridPane.rowIndex="9" />
-                                    <JFXSlider fx:id="tSlider" blockIncrement="0.1" max="25.0" min="0.1" minorTickCount="20" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                 </children>
-                              </GridPane>
+                              <JFXButton ellipsisString="" layoutX="5.0" layoutY="12.0" mnemonicParsing="false" onAction="#carregarPropertiesTreino" prefHeight="25.0" prefWidth="155.0" style="-fx-background-radius: 5px; -fx-font-size: 12px; -fx-font-weight: bold;" text="Propriedades dos Dados" AnchorPane.leftAnchor="5.0">
+                                 <styleClass>
+                                    <String fx:value="button" />
+                                    <String fx:value="menu-2-color" />
+                                 </styleClass>
+                                 <ripplerFill>
+                                    <LinearGradient endX="1.0" endY="1.0">
+                                       <stops>
+                                          <Stop color="BLACK" />
+                                          <Stop color="WHITE" offset="1.0" />
+                                       </stops>
+                                    </LinearGradient>
+                                 </ripplerFill>
+                              </JFXButton>
+                              <Label fx:id="lblProperties" layoutX="167.0" layoutY="18.0" prefHeight="20.0" prefWidth="460.0" text="PropriedadesPropriedadesPropriedadesPropriedadesPropriedades" AnchorPane.leftAnchor="169.0" AnchorPane.rightAnchor="5.0" />
+                              <JFXButton ellipsisString="" layoutX="5.0" layoutY="38.0" mnemonicParsing="false" onAction="#carregarConfig" prefHeight="25.0" prefWidth="155.0" style="-fx-background-radius: 5px; -fx-font-size: 12px; -fx-font-weight: bold;" text="Carregar Configurações" AnchorPane.leftAnchor="5.0">
+                                 <styleClass>
+                                    <String fx:value="button" />
+                                    <String fx:value="menu-2-color" />
+                                 </styleClass>
+                                 <ripplerFill>
+                                    <LinearGradient endX="1.0" endY="1.0">
+                                       <stops>
+                                          <Stop color="BLACK" />
+                                          <Stop color="WHITE" offset="1.0" />
+                                       </stops>
+                                    </LinearGradient>
+                                 </ripplerFill>
+                              </JFXButton>
+                              <Label fx:id="lblConfig" layoutX="167.0" layoutY="41.0" prefHeight="20.0" prefWidth="460.0" text="Padrão Config" AnchorPane.leftAnchor="169.0" AnchorPane.rightAnchor="5.0" />
+                              <JFXButton ellipsisString="" layoutX="5.0" layoutY="64.0" mnemonicParsing="false" onAction="#carregarDadosTreino" prefHeight="25.0" prefWidth="155.0" style="-fx-background-radius: 5px; -fx-font-size: 12px; -fx-font-weight: bold;" text="Dados de Treino" AnchorPane.leftAnchor="5.0">
+                                 <styleClass>
+                                    <String fx:value="button" />
+                                    <String fx:value="menu-2-color" />
+                                 </styleClass>
+                                 <ripplerFill>
+                                    <LinearGradient endX="1.0" endY="1.0">
+                                       <stops>
+                                          <Stop color="BLACK" />
+                                          <Stop color="WHITE" offset="1.0" />
+                                       </stops>
+                                    </LinearGradient>
+                                 </ripplerFill>
+                              </JFXButton>
+                              <Label fx:id="lblDadosTreino" layoutX="164.0" layoutY="67.0" prefHeight="20.0" prefWidth="460.0" text="TReinTReinTReinTReinTReinTReinTReinTReinTReinTRein" AnchorPane.leftAnchor="169.0" AnchorPane.rightAnchor="5.0" />
+                              <JFXButton ellipsisString="" layoutX="5.0" layoutY="91.0" mnemonicParsing="false" onAction="#carregarDadosTeste" prefHeight="25.0" prefWidth="155.0" style="-fx-background-radius: 5px; -fx-font-size: 12px; -fx-font-weight: bold;" text="Dados de Teste" AnchorPane.leftAnchor="5.0">
+                                 <styleClass>
+                                    <String fx:value="button" />
+                                    <String fx:value="menu-2-color" />
+                                 </styleClass>
+                                 <ripplerFill>
+                                    <LinearGradient endX="1.0" endY="1.0">
+                                       <stops>
+                                          <Stop color="BLACK" />
+                                          <Stop color="WHITE" offset="1.0" />
+                                       </stops>
+                                    </LinearGradient>
+                                 </ripplerFill>
+                              </JFXButton>
+                              <Label fx:id="lblDadosTeste" layoutX="166.0" layoutY="92.0" prefHeight="20.0" prefWidth="460.0" text="asdasdasdasdasd" AnchorPane.leftAnchor="169.0" AnchorPane.rightAnchor="5.0" />
+                              <JFXCheckBox fx:id="cbDadoTesteParada" layoutX="10.0" layoutY="139.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="284.0" text="Dados de Teste Como Critério de Parada" AnchorPane.leftAnchor="5.0" />
+                              <JFXCheckBox fx:id="cbGerarLogEstado" disable="true" layoutY="171.0" text="Gerar Arquivo de Log" AnchorPane.leftAnchor="5.0" />
+                              <Label layoutX="298.0" layoutY="140.0" prefHeight="20.0" prefWidth="332.0" text="Atualização UI (s)" AnchorPane.leftAnchor="297.0" AnchorPane.rightAnchor="5.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <JFXSlider fx:id="tSlider" blockIncrement="0.1" layoutX="298.0" layoutY="170.0" majorTickUnit="3.0" max="25.0" min="0.1" minorTickCount="10" prefHeight="17.0" prefWidth="332.0" showTickLabels="true" showTickMarks="true" value="0.1" AnchorPane.leftAnchor="297.0" AnchorPane.rightAnchor="5.0" />
+                              <Label layoutX="14.0" layoutY="218.0" prefHeight="20.0" prefWidth="140.0" text="Topologia" AnchorPane.leftAnchor="5.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblTopologia" layoutX="170.0" layoutY="218.0" prefHeight="20.0" prefWidth="112.0" text="topologia" textAlignment="CENTER" AnchorPane.leftAnchor="170.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="14.0" layoutY="238.0" prefWidth="140.0" text="Época Máxima" AnchorPane.leftAnchor="5.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblEpocaMax" layoutX="109.0" layoutY="238.0" prefWidth="112.0" text="epocaMaxima" textAlignment="CENTER" AnchorPane.leftAnchor="170.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="5.0" layoutY="259.0" prefWidth="140.0" text="Erro RMS Desejado" AnchorPane.leftAnchor="5.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblErroDesejado" layoutX="170.0" layoutY="259.0" prefWidth="112.0" text="erroAlvo" textAlignment="CENTER" AnchorPane.leftAnchor="170.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="317.0" layoutY="218.0" text="Termo Linear" AnchorPane.rightAnchor="170.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblTermoLinear" layoutX="412.0" layoutY="218.0" prefWidth="150.0" text="termoLinear" textAlignment="CENTER" AnchorPane.rightAnchor="5.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="290.0" layoutY="238.0" text="Aprendizado Ini." AnchorPane.rightAnchor="170.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblTaxaAprendizado" layoutX="412.0" layoutY="238.0" prefWidth="150.0" text="taxaAprendizado" textAlignment="CENTER" AnchorPane.rightAnchor="5.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="5.0" layoutY="279.0" prefWidth="140.0" text="Momentum" AnchorPane.leftAnchor="5.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblMomentum" layoutX="170.0" layoutY="280.0" prefHeight="20.0" prefWidth="112.0" text="momentum" textAlignment="CENTER" AnchorPane.leftAnchor="170.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="5.0" layoutY="301.0" prefWidth="140.0" text="Função de Ativação" AnchorPane.leftAnchor="5.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblFuncaoAtiv" layoutX="170.0" layoutY="301.0" prefWidth="112.0" text="fAtiv" AnchorPane.leftAnchor="170.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="285.0" layoutY="304.0" text="Faixa de Pesos [-w,w]" AnchorPane.rightAnchor="170.0" />
+                              <Label fx:id="lblFaixaPeso" layoutX="412.0" layoutY="304.0" prefHeight="17.0" prefWidth="150.0" text="faixaPeso" AnchorPane.rightAnchor="5.0" />
+                              <Label layoutX="318.0" layoutY="259.0" text="Aprendizado" AnchorPane.rightAnchor="170.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblTaxaAprendizadoAtual" layoutX="412.0" layoutY="259.0" prefWidth="150.0" text="taxaAprendizado" textAlignment="CENTER" AnchorPane.rightAnchor="5.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
                            </children>
-                           <padding>
-                              <Insets bottom="10.0" />
-                           </padding>
-                        </HBox>
+                        </AnchorPane>
                      </children>
                   </VBox>
                   <AnchorPane prefHeight="491.0" prefWidth="363.0">
                      <children>
-                        <ToolBar layoutX="4.0" prefHeight="56.0" prefWidth="347.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                          <items>
-                              <JFXButton fx:id="btnNovaRede" contentDisplay="CENTER" mnemonicParsing="false" onAction="#novaRede" prefHeight="44.0" text="Novo" textFill="#010101">
+                        <HBox spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <JFXButton fx:id="btnNovaRede" alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#novaRede" prefHeight="40.0" prefWidth="80.0" text="Novo" textFill="#010101">
                                  <cursor>
                                     <Cursor fx:constant="DEFAULT" />
                                  </cursor>
@@ -341,7 +300,7 @@
                                     </LinearGradient>
                                  </ripplerFill>
                               </JFXButton>
-                            <JFXButton fx:id="btnPlay" contentDisplay="CENTER" mnemonicParsing="false" onAction="#iniciarTreino" prefHeight="44.0" text="" textFill="#010101">
+                            <JFXButton fx:id="btnPlay" alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#iniciarTreino" prefHeight="40.0" prefWidth="50.0" text="" textFill="#010101">
                                  <graphic>
                                     <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                                        <image>
@@ -362,7 +321,7 @@
                                     </LinearGradient>
                                  </ripplerFill>
                               </JFXButton>
-                              <JFXButton fx:id="btnLimpaGraph" contentDisplay="CENTER" mnemonicParsing="false" onAction="#limparGrafico" text="" textFill="#010101">
+                              <JFXButton fx:id="btnLimpaGraph" alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#limparGrafico" prefHeight="40.0" prefWidth="50.0" text="" textFill="#010101">
                                  <graphic>
                                     <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                                        <image>
@@ -380,7 +339,7 @@
                                     </LinearGradient>
                                  </ripplerFill>
                               </JFXButton>
-                              <JFXButton fx:id="btnLimpaText" contentDisplay="CENTER" mnemonicParsing="false" onAction="#limparTexto" text="" textFill="#010101">
+                              <JFXButton fx:id="btnLimpaText" alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#limparTexto" prefHeight="40.0" prefWidth="50.0" text="" textFill="#010101">
                                  <graphic>
                                     <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                                        <image>
@@ -398,7 +357,7 @@
                                     </LinearGradient>
                                  </ripplerFill>
                               </JFXButton>
-                              <JFXButton fx:id="btnMostraText" contentDisplay="CENTER" mnemonicParsing="false" onAction="#mostrarTexto" prefHeight="0.0" text="" textFill="#010101">
+                              <JFXButton fx:id="btnMostraText" alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#mostrarTexto" prefHeight="40.0" prefWidth="50.0" text="" textFill="#010101">
                                  <graphic>
                                     <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                                        <image>
@@ -416,7 +375,7 @@
                                     </LinearGradient>
                                  </ripplerFill>
                               </JFXButton>
-                              <JFXButton fx:id="btnMostraGraph" contentDisplay="CENTER" mnemonicParsing="false" onAction="#mostrarGrafico" prefHeight="0.0" text="" textFill="#010101">
+                              <JFXButton fx:id="btnMostraGraph" alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#mostrarGrafico" prefHeight="40.0" prefWidth="50.0" text="" textFill="#010101">
                                  <graphic>
                                     <ImageView fitHeight="30.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                                        <image>
@@ -434,7 +393,7 @@
                                     </LinearGradient>
                                  </ripplerFill>
                               </JFXButton>
-                              <JFXButton fx:id="btnTestar" contentDisplay="CENTER" layoutX="10.0" layoutY="15.0" mnemonicParsing="false" onAction="#iniciarTeste" prefHeight="44.0" text="Testar RNA" textFill="#010101">
+                              <JFXButton fx:id="btnTestar" alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#iniciarTeste" prefHeight="40.0" prefWidth="80.0" text="Testar RNA" textFill="#010101">
                                  <cursor>
                                     <Cursor fx:constant="DEFAULT" />
                                  </cursor>
@@ -448,71 +407,63 @@
                                     </LinearGradient>
                                  </ripplerFill>
                               </JFXButton>
-                          </items>
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets>
-                        </ToolBar>
-                        <AnchorPane layoutY="61.0" prefHeight="56.0" prefWidth="528.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="61.0">
+                           </children>
+                        </HBox>
+                        <GridPane hgap="5.0" layoutX="-1.0" layoutY="61.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
+                           <columnConstraints>
+                              <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
                            <children>
                               <Label prefHeight="21.0" prefWidth="80.0" text="Época Atual">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lblEpocaAtual" layoutX="-1.0" layoutY="21.0" prefHeight="21.0" prefWidth="97.0">
+                              <Label fx:id="lblEpocaAtual" prefHeight="21.0" prefWidth="97.0" GridPane.rowIndex="1">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
                               </Label>
-                              <Separator layoutX="94.0" orientation="VERTICAL" prefHeight="56.0" prefWidth="16.0">
-                                 <opaqueInsets>
-                                    <Insets right="5.0" />
-                                 </opaqueInsets>
-                              </Separator>
-                              <Label layoutX="223.0" layoutY="1.0" prefHeight="21.0" prefWidth="140.0" text="Erro Teste">
+                              <Label prefHeight="21.0" prefWidth="140.0" text="Erro Teste" GridPane.columnIndex="2">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lblErroTeste" layoutX="224.0" layoutY="22.0" prefHeight="20.0" prefWidth="140.0">
+                              <Label fx:id="lblErroTeste" prefHeight="20.0" prefWidth="140.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="107.0" prefHeight="21.0" prefWidth="100.0" text="Treino (s)">
+                              <Label prefHeight="21.0" prefWidth="100.0" text="Treino (s)" GridPane.columnIndex="1">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lblTempoTreino" layoutX="107.0" layoutY="21.0" prefHeight="20.0" prefWidth="101.0">
+                              <Label fx:id="lblTempoTreino" prefHeight="20.0" prefWidth="101.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
                               </Label>
-                              <Separator layoutX="207.0" orientation="VERTICAL" prefHeight="56.0" prefWidth="16.0">
-                                 <opaqueInsets>
-                                    <Insets right="5.0" />
-                                 </opaqueInsets>
-                              </Separator>
-                              <Separator layoutX="366.0" orientation="VERTICAL" prefHeight="56.0" prefWidth="16.0">
-                                 <opaqueInsets>
-                                    <Insets right="5.0" />
-                                 </opaqueInsets>
-                              </Separator>
-                              <Label layoutX="382.0" layoutY="1.0" prefHeight="21.0" prefWidth="140.0" text="Erro Treino">
+                              <Label prefHeight="21.0" prefWidth="140.0" text="Erro Treino" GridPane.columnIndex="3">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lblErroTreino" layoutX="382.0" layoutY="22.0" prefHeight="20.0" prefWidth="140.0">
+                              <Label fx:id="lblErroTreino" prefHeight="20.0" prefWidth="140.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
                               </Label>
                            </children>
-                        </AnchorPane>
-                        <TabPane layoutX="4.0" layoutY="122.0" prefHeight="381.0" prefWidth="409.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="117.0">
+                        </GridPane>
+                        <TabPane layoutX="4.0" layoutY="115.0" prefHeight="389.0" prefWidth="528.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="114.0">
                           <tabs>
                             <Tab fx:id="tabTreino" text="Treinamento - Erro x Época" />
                           </tabs>

@@ -105,7 +105,7 @@ public class RnaController extends Task<Void> {
                 }
             } else {// Sem usar os dados de teste
                 // Critério de parada
-                if ((rna.getEpocaAtual() > rna.getEpocaMaxima()) || (erroEpocaTeste < rna.getErroAlvo())) {
+                if ((rna.getEpocaAtual() > rna.getEpocaMaxima()) || (erroEpocaTreino < rna.getErroAlvo())) {
                     Ctrl.setRnaEmExecucao(false);
                 }
             }
@@ -144,11 +144,12 @@ public class RnaController extends Task<Void> {
             throw new ExceptionPlanejada("As configurações básicas da RNA não foram carregadas.");
         }
 
-        Topologia.configTolopogia();
-        Ctrl.setRnaEmExecucao(true);
+      //  Topologia.configuraTolopogia();
+
 
         //TODO: Aqui estava atribuindo os valores do usuário para a classe que gerencia tais informações de verdade. ... Implementar isso de uma maneira mais refinada chamanado uma função no momento de salvar estes dados...
         if (ConfigGeral.getConfigGeralAtual().getRnaAtual() == null) {
+            Topologia.configuraTolopogia();
             ConfigGeral.getConfigGeralAtual().setRnaAtual(new Rna(Topologia.getTolopogiaArray()));
             Operacoes.findMinMaxVals(
                     ConjuntoDados.dadosTreinamento.getDadosSaida(),
@@ -250,6 +251,7 @@ public class RnaController extends Task<Void> {
 
     @Override
     protected Void call() throws Exception {
+        Ctrl.setRnaEmExecucao(true);
         treinoSetup();
         logSetup();
         treinar();
@@ -272,6 +274,8 @@ public class RnaController extends Task<Void> {
         ((SimpleDoubleProperty) ValoresDisplay.obsTreinoErro).set(erroEpocaTreino);
         ((SimpleDoubleProperty) ValoresDisplay.obsTreinoTempoDeTreinamento).set(Operacoes.nanoParaNormal(tTreino));
         ((SimpleLongProperty) ValoresDisplay.obsEpocaAtual).set(rna.getEpocaAtual());
+        ((SimpleDoubleProperty) ValoresDisplay.obsTaxaAprendizadoAtual).set(rna.getTaxaAprendizado());
+        ((SimpleDoubleProperty) ValoresDisplay.obsTaxaAprendizado).set(rna.getTaxaAprendizadoInicial());
         Utilidade.notification("Treinamento Concluído");
 
     }
@@ -280,8 +284,9 @@ public class RnaController extends Task<Void> {
     protected void updateValue(Void value) {
         Platform.runLater(() -> {
             ((SimpleDoubleProperty) ValoresDisplay.obsTreinoErro).set(erroEpocaTreino);
+            ((SimpleDoubleProperty) ValoresDisplay.obsTaxaAprendizadoAtual).set(rna.getTaxaAprendizado());
+            ((SimpleDoubleProperty) ValoresDisplay.obsTaxaAprendizado).set(rna.getTaxaAprendizadoInicial());
             ((SimpleLongProperty) ValoresDisplay.obsEpocaAtual).set(rna.getEpocaAtual());
-
             Principal.getGraficoLinha().addPonto(new Ponto(rna.getEpocaAtual(), erroEpocaTreino), Principal.getGraficoLinha().sTreino);
 
             if (Ctrl.isDadosTesteCarregados() && Ctrl.isUsarDadosTesteTreino()) {

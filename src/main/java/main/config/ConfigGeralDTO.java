@@ -2,15 +2,21 @@ package main.config;
 
 import ann.detalhes.Rna;
 import ann.funcao_ativacao.FuncaoTipo;
+import ann.geral.FuncaoDecaimento;
 
 import java.util.Arrays;
 
 // TODO: Implementar main.config Geral no BD.
 public class ConfigGeralDTO {
-    public ConfigGeralDTO() {
+
+
+    private FuncaoDecaimento funcaoDecaimento;
+
+    public void setFuncaoDecaimento(FuncaoDecaimento funcaoDecaimento) {
+        this.funcaoDecaimento = funcaoDecaimento;
     }
 
-    public ConfigGeralDTO(int[] topologiaOculta, int epocaMaxima, double erroAlvo, double eta, double momentum, double termoLinear, double faixaPesos, FuncaoTipo funcaoAtivacao, FuncaoTipo funcaoAtivacaoSaida, Rna rnaAtual, double normMin, double normMax, double[] inColumnMin, double[] inColumnMax, double[] outColumnMin, double[] outColumnMax) {
+    public ConfigGeralDTO(int[] topologiaOculta, int epocaMaxima, double erroAlvo, double eta, double momentum, double termoLinear, double faixaPesos, FuncaoTipo funcaoAtivacao, FuncaoTipo funcaoAtivacaoSaida, Rna rnaAtual, double normMin, double normMax, double[] inColumnMin, double[] inColumnMax, double[] outColumnMin, double[] outColumnMax, double taxaDecaimentoPasso, double taxaDecaimentoGanho, FuncaoDecaimento funcaoDecaimento) {
         this.topologiaOculta = topologiaOculta;
         this.epocaMaxima = epocaMaxima;
         this.erroAlvo = erroAlvo;
@@ -27,6 +33,9 @@ public class ConfigGeralDTO {
         this.inColumnMax = inColumnMax;
         this.outColumnMin = outColumnMin;
         this.outColumnMax = outColumnMax;
+        this.taxaDecaimentoPasso = taxaDecaimentoPasso;
+        this.taxaDecaimentoGanho = taxaDecaimentoGanho;
+        this.funcaoDecaimento = funcaoDecaimento;
     }
 
     /**
@@ -63,6 +72,9 @@ public class ConfigGeralDTO {
     private FuncaoTipo funcaoAtivacao;
 
     private FuncaoTipo funcaoAtivacaoSaida;
+
+    private double taxaDecaimentoPasso;
+    private double taxaDecaimentoGanho;
 
     /**
      * Rede neural completa.
@@ -210,7 +222,8 @@ public class ConfigGeralDTO {
     @Override
     public String toString() {
         return "ConfigGeralDTO{" +
-                "topologiaOculta=" + Arrays.toString(topologiaOculta) +
+                "funcaoDecaimento=" + funcaoDecaimento +
+                ", topologiaOculta=" + Arrays.toString(topologiaOculta) +
                 ", epocaMaxima=" + epocaMaxima +
                 ", erroAlvo=" + erroAlvo +
                 ", taxaAprendizado=" + taxaAprendizado +
@@ -219,6 +232,8 @@ public class ConfigGeralDTO {
                 ", faixaPesos=" + faixaPesos +
                 ", funcaoAtivacao=" + funcaoAtivacao +
                 ", funcaoAtivacaoSaida=" + funcaoAtivacaoSaida +
+                ", taxaDecaimentoPasso=" + taxaDecaimentoPasso +
+                ", taxaDecaimentoGanho=" + taxaDecaimentoGanho +
                 ", rnaAtual=" + rnaAtual +
                 ", normMin=" + normMin +
                 ", normMax=" + normMax +
@@ -227,6 +242,26 @@ public class ConfigGeralDTO {
                 ", outColumnMin=" + Arrays.toString(outColumnMin) +
                 ", outColumnMax=" + Arrays.toString(outColumnMax) +
                 '}';
+    }
+
+    public void setTaxaDecaimentoPasso(double taxaDecaimentoPasso) {
+        this.taxaDecaimentoPasso = taxaDecaimentoPasso;
+    }
+
+    public void setTaxaDecaimentoGanho(double taxaDecaimentoGanho) {
+        this.taxaDecaimentoGanho = taxaDecaimentoGanho;
+    }
+
+    public double getTaxaDecaimentoPasso() {
+        return taxaDecaimentoPasso;
+    }
+
+    public double getTaxaDecaimentoGanho() {
+        return taxaDecaimentoGanho;
+    }
+
+    public FuncaoDecaimento getFuncaoDecaimento() {
+        return funcaoDecaimento;
     }
 }
 

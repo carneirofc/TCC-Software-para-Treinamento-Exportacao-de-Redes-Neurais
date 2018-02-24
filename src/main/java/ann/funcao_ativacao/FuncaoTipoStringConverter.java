@@ -6,7 +6,7 @@ import main.config.ConfigGeral;
 public class FuncaoTipoStringConverter extends StringConverter<FuncaoTipo> {
     @Override
     public String toString(FuncaoTipo object) {
-        return object.getNomeFuncao() + " : " + object.getStringFuncao(ConfigGeral.getConfigGeralAtual().getTermoLinear());
+        return object.getNome() + " : " + object.getStringFuncao(ConfigGeral.getConfigGeralAtual().getTermoLinear());
     }
 
     @Override
