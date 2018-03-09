@@ -23,7 +23,7 @@
     <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.8.2" level="project" />
     <orderEntry type="library" name="Gradle: org.hibernate:hibernate-core:5.2.12.Final" level="project" />
     <orderEntry type="library" name="Gradle: org.controlsfx:controlsfx:9.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: mysql:mysql-connector-java:6.0.6" level="project" />
+    <orderEntry type="library" name="Gradle: mysql:mysql-connector-java:5.1.45" level="project" />
     <orderEntry type="library" name="Gradle: javax.xml.bind:jaxb-api:2.3.0" level="project" />
     <orderEntry type="library" name="Gradle: com.sun.xml.bind:jaxb-core:2.3.0" level="project" />
     <orderEntry type="library" name="Gradle: com.sun.xml.bind:jaxb-impl:2.3.0" level="project" />

@@ -43,6 +43,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -55,34 +56,36 @@
                         <Label text="Época Máxima" GridPane.rowIndex="1" />
                         <Label text="Erro Desejado" GridPane.rowIndex="2" />
                         <Label text="Taxa de Aprendizado" GridPane.rowIndex="3" />
-                        <Label text="Momentum" GridPane.rowIndex="7" />
-                        <Label GridPane.rowIndex="12" />
-                        <Label text="Faixa dos Pesos Iniciais" GridPane.rowIndex="8" />
-                        <JFXComboBox fx:id="cbFuncaoAtivacao" prefHeight="25.0" prefWidth="320.0" promptText="Função de Ativação Interna" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                        <Label text="Momentum" GridPane.rowIndex="8" />
+                        <Label GridPane.rowIndex="13" />
+                        <Label text="Faixa dos Pesos Iniciais" GridPane.rowIndex="9" />
+                        <JFXComboBox fx:id="cbFuncaoAtivacao" prefHeight="25.0" prefWidth="320.0" promptText="Função de Ativação Interna" GridPane.columnIndex="1" GridPane.rowIndex="11" />
                         <JFXTextField fx:id="tfTopologia" prefHeight="25.0" prefWidth="320.0" promptText="camadas separadas por &quot;;&quot;" GridPane.columnIndex="1" />
                         <JFXTextField fx:id="tfEpocaMaxima" prefWidth="320.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <JFXTextField fx:id="tfErroDesejado" prefWidth="320.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <JFXTextField fx:id="tfTaxaAprendizado" prefWidth="320.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <JFXTextField fx:id="tfMomentum" prefWidth="320.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                        <JFXTextField fx:id="tfTermoLinear" prefWidth="320.0" promptText="Termo Linear Adicional" GridPane.columnIndex="1" GridPane.rowIndex="12" />
-                        <JFXTextField fx:id="tfPesoInicial" promptText="para uma faixa de [-x , +x]" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                        <JFXTextField fx:id="tfMomentum" prefWidth="320.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                        <JFXTextField fx:id="tfTermoLinear" prefWidth="320.0" promptText="Termo Linear Adicional" GridPane.columnIndex="1" GridPane.rowIndex="13" />
+                        <JFXTextField fx:id="tfPesoInicial" promptText="para uma faixa de [-x , +x]" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                         <Label fx:id="lblTopologia" GridPane.columnIndex="2" />
                         <Label fx:id="lblEpocaMax" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <Label fx:id="lblErroDesejado" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                         <Label fx:id="lblTaxaAprendizado" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                        <Label fx:id="lblMomentum" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-                        <Label fx:id="lblTermoLinear" GridPane.columnIndex="2" GridPane.rowIndex="12" />
-                        <Label fx:id="lblPesoInicial" GridPane.columnIndex="2" GridPane.rowIndex="8" />
-                        <Label fx:id="lblFuncaoAtiv" GridPane.columnIndex="2" GridPane.rowIndex="10" />
-                        <JFXComboBox fx:id="cbFuncAtivacaoSaida" prefHeight="25.0" prefWidth="320.0" promptText="Função de Ativação Saída" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-                        <Label fx:id="lblFuncaAtivSaida" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+                        <Label fx:id="lblMomentum" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+                        <Label fx:id="lblTermoLinear" GridPane.columnIndex="2" GridPane.rowIndex="13" />
+                        <Label fx:id="lblPesoInicial" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+                        <Label fx:id="lblFuncaoAtiv" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+                        <JFXComboBox fx:id="cbFuncAtivacaoSaida" prefHeight="25.0" prefWidth="320.0" promptText="Função de Ativação Saída" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+                        <Label fx:id="lblFuncaAtivSaida" GridPane.columnIndex="2" GridPane.rowIndex="12" />
                         <JFXTextField fx:id="tfGanhoDecaimento" promptText="Ganho Decaimento" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <Label fx:id="lblTaxaDecaimento" GridPane.columnIndex="2" GridPane.rowIndex="5" />
                         <JFXComboBox fx:id="cbFuncaoDecaimento" prefWidth="320.0" promptText="Função de Decaimento" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <Label fx:id="lblFuncaoDecaimento" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                        <Label text="Função de Ativação" GridPane.rowIndex="9" />
+                        <Label text="Função de Ativação" GridPane.rowIndex="10" />
                         <JFXTextField fx:id="tfPassoDecaimento" promptText="Passo de Decaimento" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                         <Label fx:id="lblPassoDecaimento" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                  <JFXTextField fx:id="tfTaxaAprendizadoMinima" promptText="Taxa Minima" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                  <Label fx:id="lblTaxaAprendizadoMinima" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="7" />
                     </children>
                 </GridPane>
                 <JFXButton fx:id="btnSalvar" layoutX="315.0" layoutY="594.0" mnemonicParsing="false" onAction="#salvar" prefWidth="150.0" text="Salvar" AnchorPane.bottomAnchor="34.0">

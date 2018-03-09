@@ -40,6 +40,7 @@ public class Rna {
     private double erroAlvo;
     private double taxaAprendizado;
     private double taxaAprendizadoInicial;
+    private double taxaAprendizadoMinima;
     private double momentum;
 
     private double taxaDecaimentoPasso;
@@ -72,7 +73,11 @@ public class Rna {
     }
 
     private void atualizaEta() {
-        taxaAprendizado = decaimentoTaxaAprendizado.getNovoEta().calc(taxaAprendizado, taxaAprendizadoInicial, epocaAtual, taxaDecaimentoPasso, taxaDecaimentoGanho);
+        taxaAprendizado = decaimentoTaxaAprendizado.getNovoEta().calc(taxaAprendizado, taxaAprendizadoInicial,taxaAprendizadoMinima, epocaAtual, taxaDecaimentoPasso, taxaDecaimentoGanho);
+    }
+
+    public FuncaoDecaimento getDecaimentoTaxaAprendizado() {
+        return decaimentoTaxaAprendizado;
     }
 
     private Rna(double faixaInicialPesos, boolean dropout, double termoLinear, FuncaoTipo funcaoAtivacaoInterna, FuncaoTipo getFuncaoAtivacaoSaida, int[] topologia, FuncaoDecaimento decaimentoTaxaAprendizado) {
@@ -90,9 +95,18 @@ public class Rna {
         this.erroAlvo = ConfigGeral.getConfigGeralAtual().getErroAlvo();
         this.taxaAprendizadoInicial = ConfigGeral.getConfigGeralAtual().getTaxaAprendizado();
         this.taxaAprendizado = taxaAprendizadoInicial;
+        this.taxaAprendizadoMinima = ConfigGeral.getConfigGeralAtual().getTaxaAprendizadoMinima();;
         this.momentum = ConfigGeral.getConfigGeralAtual().getMomentum();
         this.taxaDecaimentoPasso = ConfigGeral.getConfigGeralAtual().getTaxaDecaimentoPasso();
         this.taxaDecaimentoGanho = ConfigGeral.getConfigGeralAtual().getTaxaDecaimentoGanho();
+    }
+
+    public double getTaxaDecaimentoPasso() {
+        return taxaDecaimentoPasso;
+    }
+
+    public double getTaxaDecaimentoGanho() {
+        return taxaDecaimentoGanho;
     }
 
     /**
@@ -425,6 +439,10 @@ public class Rna {
 
     public double getMomentum() {
         return momentum;
+    }
+
+    public double getTaxaAprendizadoMinima() {
+        return taxaAprendizadoMinima;
     }
 
     @Override

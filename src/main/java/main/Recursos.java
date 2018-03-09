@@ -50,8 +50,12 @@ public class Recursos {
             "validação e programação propriamente dita. O aplicativo é especialmente útil em processos de prototipagem, simulações em\n" +
             "softwares de terceiros e implementações em microcontroladores.\n" +
             "\nO autor não se responsabiliza por possíveis danos, diretos ou indiretos, devido ao uso do aplicativo." +
-            "\n\nautor  : Cláudio Ferreira Carrneiro" +
-            "\ncontato: claudiofcarneiro@hotmail.com";
+            "\n" +
+            "\n" +
+            "\nautor     : Cláudio Ferreira Carrneiro" +
+            "\ncontato   : claudiofcarneiro@hotmail.com" +
+            "\norientador: Carlos Henrique Vasconcelos"+
+            "\ngit    : https://github.com/carneirofc/TCC-Software-para-Treinamento-Exportacao-de-Redes-Neurais";
     public static Reader CONFIG_GERAL_DEFAULT;
 
     static {

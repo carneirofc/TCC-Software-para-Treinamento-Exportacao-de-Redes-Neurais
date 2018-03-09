@@ -41,6 +41,10 @@ import java.util.regex.Pattern;
 public class Opcoes implements Initializable {
 
     @FXML
+    private JFXTextField tfTaxaAprendizadoMinima;
+    @FXML
+    private Label lblTaxaAprendizadoMinima;
+    @FXML
     private JFXTextField tfGanhoDecaimento;
     @FXML
     private Label lblTaxaDecaimento;
@@ -152,6 +156,9 @@ public class Opcoes implements Initializable {
             if (!tfTaxaAprendizado.getText().isEmpty()) {
                 ConfigGeral.getConfigGeralAtual().setTaxaAprendizado(ValoresDisplay.NUMBER_FORMAT_NOTACAO_CIENTIFICA.parse(tfTaxaAprendizado.getText()).doubleValue());
             }
+            if (!tfTaxaAprendizadoMinima.getText().isEmpty()) {
+                ConfigGeral.getConfigGeralAtual().setTaxaAprendizadoMinima(ValoresDisplay.NUMBER_FORMAT_NOTACAO_CIENTIFICA.parse(tfTaxaAprendizadoMinima.getText()).doubleValue());
+            }
             if (!tfMomentum.getText().isEmpty()) {
                 ConfigGeral.getConfigGeralAtual().setMomentum(ValoresDisplay.NUMBER_FORMAT_NOTACAO_CIENTIFICA.parse(tfMomentum.getText()).doubleValue());
             }
@@ -171,17 +178,6 @@ public class Opcoes implements Initializable {
             if (!tfTopologia.getText().isEmpty()) {
                 ConfigGeral.getConfigGeralAtual().setTopologiaOculta(Converter.stringToIntVector(tfTopologia.getText()));
                 Topologia.configuraTolopogia();
-//                String hiddenTopology = tfTopologia.getText();
-//                hiddenTopology = hiddenTopology.trim();
-//                if (!hiddenTopology.isEmpty()) {
-//                    hiddenTopology = hiddenTopology.replaceAll(Pattern.quote(".01234567890E-4;"), "");
-//                    String s[] = hiddenTopology.split(";");
-//                    int is[] = new int[s.length];
-//                    for (int i = 0; i < s.length; i++) {
-//                        is[i] = Integer.parseInt(s[i]);
-//                    }
-//                    ConfigGeral.getConfigGeralAtual().setTopologiaOculta(is);
-//                }
             }
             ConfigGeral.setConfigGeralAtual();
             stage.close();
@@ -226,6 +222,7 @@ public class Opcoes implements Initializable {
         lblMomentum.textProperty().bind(Bindings.format("%e", ValoresDisplay.obsMomentum));
         lblPesoInicial.textProperty().bind(Bindings.format("%f", ValoresDisplay.obsFaixaPesoInicial));
         lblTaxaAprendizado.textProperty().bind(Bindings.format("%e", ValoresDisplay.obsTaxaAprendizado));
+        lblTaxaAprendizadoMinima.textProperty().bind(Bindings.format("%e", ValoresDisplay.obsTaxaAprendizadoMinima));
         lblTopologia.textProperty().bind(ValoresDisplay.obsTopologiaEscondida);
         lblEpocaMax.textProperty().bind(Bindings.format("%d", ValoresDisplay.obsEpocaMaxima));
         lblTermoLinear.textProperty().bind(Bindings.format("%e", ValoresDisplay.obsTermoLinear));

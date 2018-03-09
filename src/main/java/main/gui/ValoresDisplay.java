@@ -25,6 +25,7 @@ public class ValoresDisplay {
     // Provenientes de ConfigGeral
     public static ObservableDoubleValue obsMomentum = new SimpleDoubleProperty();
     public static ObservableDoubleValue obsTaxaAprendizado = new SimpleDoubleProperty();
+    public static ObservableDoubleValue obsTaxaAprendizadoMinima = new SimpleDoubleProperty();
     public static ObservableDoubleValue obsTaxaAprendizadoAtual = new SimpleDoubleProperty();
     public static ObservableDoubleValue obsTermoLinear = new SimpleDoubleProperty();
     public static ObservableDoubleValue obsFaixaPesoInicial = new SimpleDoubleProperty();

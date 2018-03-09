@@ -91,7 +91,7 @@
             <VBox alignment="CENTER" layoutY="37.0" maxHeight="55.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="37.0">
                <children>
                   <Separator prefWidth="200.0" />
-                  <Label alignment="CENTER" styleClass="text-title"  text="Software para Treinamento de Redes Neurais" textAlignment="CENTER">
+                  <Label alignment="CENTER" styleClass="text-title" text="Software para Treinamento de Redes Neurais" textAlignment="CENTER">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>

@@ -275,6 +275,7 @@ public class RnaController extends Task<Void> {
         ((SimpleDoubleProperty) ValoresDisplay.obsTreinoTempoDeTreinamento).set(Operacoes.nanoParaNormal(tTreino));
         ((SimpleLongProperty) ValoresDisplay.obsEpocaAtual).set(rna.getEpocaAtual());
         ((SimpleDoubleProperty) ValoresDisplay.obsTaxaAprendizadoAtual).set(rna.getTaxaAprendizado());
+        ((SimpleDoubleProperty) ValoresDisplay.obsTaxaAprendizadoMinima).set(rna.getTaxaAprendizadoMinima());
         ((SimpleDoubleProperty) ValoresDisplay.obsTaxaAprendizado).set(rna.getTaxaAprendizadoInicial());
         Utilidade.notification("Treinamento Concluído");
 

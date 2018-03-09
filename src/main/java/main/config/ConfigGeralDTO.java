@@ -56,6 +56,7 @@ public class ConfigGeralDTO {
      * Taxa de aprendizado. ETA.
      */
     private double taxaAprendizado;
+    private double taxaAprendizadoMinima;
     /**
      * Valor do momentum.
      */
@@ -242,6 +243,14 @@ public class ConfigGeralDTO {
                 ", outColumnMin=" + Arrays.toString(outColumnMin) +
                 ", outColumnMax=" + Arrays.toString(outColumnMax) +
                 '}';
+    }
+
+    public double getTaxaAprendizadoMinima() {
+        return taxaAprendizadoMinima;
+    }
+
+    public void setTaxaAprendizadoMinima(double taxaAprendizadoMinima) {
+        this.taxaAprendizadoMinima = taxaAprendizadoMinima;
     }
 
     public void setTaxaDecaimentoPasso(double taxaDecaimentoPasso) {
