@@ -1,6 +1,5 @@
 package main;
 
-import ann.funcao_ativacao.FuncaoTipo;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -77,6 +76,12 @@ public class Main extends Application {
         adicionarPopUp(localFxml, tituloJanela, true, true, Recursos.ICONE_JAVAFX);
     }
 
+    public static void main(String[] args) {
+        //   FuncaoTipo ad = FuncaoTipo.TANGENTE_HIPERBOLICA;
+        Locale.setDefault(Locale.UK);
+        launch(args);
+    }
+
     /**
      * Cria um popup
      *
@@ -103,7 +108,9 @@ public class Main extends Application {
             stage.getIcons().add(new Image(iconeJanela));
             if (fxmlLoader.getController() instanceof Opcoes)
                 ((Opcoes) fxmlLoader.getController()).setStage(stage);
+            stage.sizeToScene();
             stage.show();
+            stage.centerOnScreen();
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Erro ao carregar a Scene".concat(e.getMessage()));
@@ -118,7 +125,7 @@ public class Main extends Application {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(ClassLoader.getSystemClassLoader().getResource(Recursos.FXML_PRINCIPAL));
             Parent root = fxmlLoader.load();
-            stagePrincipalController = (Principal) fxmlLoader.getController();
+            stagePrincipalController = fxmlLoader.getController();
             scene = new Scene(root);
             stagePrincipal.setScene(scene);
             stagePrincipal.getIcons().add(new Image(Recursos.ICONE_JAVAFX));
@@ -136,13 +143,6 @@ public class Main extends Application {
             e.printStackTrace();
         }
 
-    }
-
-
-    public static void main(String[] args) {
-     //   FuncaoTipo ad = FuncaoTipo.TANGENTE_HIPERBOLICA;
-        Locale.setDefault(Locale.UK);
-        launch(args);
     }
 
 

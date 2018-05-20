@@ -23,6 +23,31 @@
     -fx-opacity: 1;
 }
 
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-opacity: 0;
+}
+
+.tab-pane {
+    -fx-tab-min-width: 90px;
+}
+
+.tab {
+    -fx-background-insets: 0 1 0 1, 0, 0;
+}
+
+.tab-header-background {
+    -fx-background-color: derive(#1d1d1d, 20%);
+}
+
+.tab .tab-label {
+    -fx-alignment: CENTER;
+}
+
+.tab:selected .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: white;
+}
+
 .table-view {
     -fx-base: #1d1d1d;
     -fx-control-inner-background: #1d1d1d;
