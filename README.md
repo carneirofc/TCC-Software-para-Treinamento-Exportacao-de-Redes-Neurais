@@ -1,8 +1,25 @@
 # TCC-Software-para-Treinamento-Exportacao-de-Redes-Neurais
-Aplicativo desenvolvido para o PIBIC, utilizado, expandido e otimizado durante o desenvolvimento do TCC.
+Aplicativo voltado ao treinamento e validação de redes neurais artificiais com arquitetura perceptron multicamadas.<p>
+"Sistema de Controle Sensorless de um Motor de Indução Utlizando Estimador Neural"<p>
 
-"Sistema de Controle Sensorless de um Motor de Indução Utlizando Estimador Neural"
-PROGRAMA INSTITUCIONAL DE INICIAÇÃO CIENTÍFICA EDITAL N° 86/17 CEFET-MG
+Para utilizar o aplicativo é necessário um conjunto com os dados de treinamento e um arquivo de configurações.
+O arquivo de configurações deverá estar salvo como .properties e ele irá descrever quais colunas do banco de treinamento são
+relativas a dados de entrada e quais são de saída. Um exemplo seria:
 
-por Cláudio Ferreira Carneiro, Bacharelando em Engenharia de Controle e Automação http://lattes.cnpq.br/8853045981105597 
+##
+\# Arquivo properties:
+<b>
+    <br>in=0,1
+    <br>out=2
+</b><p>
+##
+\# Arquivo Dataset:
+<b><p>     0 0 0
+<b><p>     0 1 1
+<b><p>     1 0 1
+<b><p>     1 1 0
+</b>
+<p>
+##
+por:        Cláudio Ferreira Carneiro, Bacharelando em Engenharia de Controle e Automação<p>
 Orientador: Carlos Henrique Silva de Vasconcelos http://lattes.cnpq.br/4476642168253767

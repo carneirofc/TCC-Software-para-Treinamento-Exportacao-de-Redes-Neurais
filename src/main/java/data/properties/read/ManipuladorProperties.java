@@ -2,19 +2,18 @@ package data.properties.read;
 
 import ann.geral.Topologia;
 import data.ConjuntoDados;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import main.Ctrl;
+import main.gui.ValoresDisplay;
+import main.utils.ExceptionPlanejada;
+import main.utils.Utilidade;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
-import main.gui.ValoresDisplay;
-import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import main.Ctrl;
-import main.utils.ExceptionPlanejada;
-import main.utils.Utilidade;
 
 /**
  * Classe responsável pela leitura de arquivos .properties bem como a associação
@@ -33,10 +32,9 @@ public class ManipuladorProperties {
      * Carrega os dados do arquivo para o programa.
      */
     private static void configTrainData() {
-        ConjuntoDados.setColunasEntrada(Utilidade.getInt(Utilidade.getStringSeparadorEspaco(dataProperties.getProperty("colunasEntrada"))));
-        ConjuntoDados.setColunasSaida(Utilidade.getInt(Utilidade.getStringSeparadorEspaco(dataProperties.getProperty("colunasSaida"))));
+        ConjuntoDados.setColunasEntrada(Utilidade.getInt(Utilidade.getStringSeparadorEspaco(dataProperties.getProperty("in"))));
+        ConjuntoDados.setColunasSaida(Utilidade.getInt(Utilidade.getStringSeparadorEspaco(dataProperties.getProperty("out"))));
 
-        //Topologia.setHiddenTopology();
         Topologia.configuraTolopogia();
     }
 

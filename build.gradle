@@ -4,26 +4,13 @@ version '2.1'
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'application'
-//apply plugin: "at.comm_unity.gradle.plugins.jpamodelgen"
 
-//setMainClassName('main.Main')
 setMainClassName('main.Main')
 setApplicationName('TCC-Claudio Software para Treinamento de RNAs')
 
 setSourceCompatibility(JavaVersion.VERSION_1_9)
 
 compileJava.options.encoding = 'UTF-8'
-/*
-buildscript {
-    repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-    dependencies {
-             classpath "gradle.plugin.at.comm_unity.gradle.plugins:jpamodelgen-plugin:1.1.4"
-    }
-}*/
 
 repositories {
     mavenCentral()
@@ -38,18 +25,12 @@ dependencies {
     compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.12.Final'
     compile group: 'org.controlsfx', name: 'controlsfx', version: '9.0.0'
 
-    //compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
-    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.45'
 
     compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
     compile group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.3.0'
     compile group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.0'
-// https://mvnrepository.com/artifact/javax.activation/com.springsource.javax.activation
     compile group: 'javax.activation', name: 'com.springsource.javax.activation', version: '1.1.0'
-
-
-
     compile group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
 
     //   compile 'com.jfoenix:jfoenix:1.9.0'
@@ -76,9 +57,4 @@ distributions {
             }
         }
     }
-}
-/*
-jpaModelgen {
-    library = "org.hibernate:hibernate-jpamodelgen:5.2.11.Final"
-    jpaModelgenSourcesDir = "src/main/java/"
-}*/
+} 
