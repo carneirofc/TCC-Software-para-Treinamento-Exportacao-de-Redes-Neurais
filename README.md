@@ -1,5 +1,6 @@
-# TCC-Software-para-Treinamento-Exportacao-de-Redes-Neurais
-Aplicativo voltado ao treinamento e validação de redes neurais artificiais com arquitetura perceptron multicamadas.<p>
+# Trabalho de Conclusão de Curso
+# Engenharia de Controle e Automação
+# Software para Treinamento e Exportação de Redes Neurais Artificiais Arquitetura Perceptron Multicamadas<b>
 "Sistema de Controle Sensorless de um Motor de Indução Utlizando Estimador Neural"<p>
 
 Para utilizar o aplicativo é necessário um conjunto com os dados de treinamento e um arquivo de configurações.
