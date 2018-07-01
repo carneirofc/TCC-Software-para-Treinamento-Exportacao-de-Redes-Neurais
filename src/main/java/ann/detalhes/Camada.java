@@ -1,5 +1,6 @@
 package ann.detalhes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  *
  * @author Claudio
  */
-public class Camada {
+public class Camada implements Serializable {
 
     private List<Neuronio> listNeuronios = new ArrayList<>();
 

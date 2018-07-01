@@ -1,5 +1,6 @@
 package ann.detalhes;
 
+import java.io.Serializable;
 import java.util.Random;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Random;
  *
  * @author Claudio
  */
-public class Pesos {
+public class Pesos implements Serializable {
 
     private double peso;
     private double deltaPeso;

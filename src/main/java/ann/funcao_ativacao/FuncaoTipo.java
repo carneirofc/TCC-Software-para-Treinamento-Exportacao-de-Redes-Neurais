@@ -5,7 +5,9 @@ import data.Operacoes;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public enum FuncaoTipo {
+import java.io.Serializable;
+
+public enum FuncaoTipo implements Serializable {
     TANGENTE_HIPERBOLICA(
             "Tangente Hiperbólica",
             (double x, double termoLinear) -> (Operacoes.tanh(x) + termoLinear * x),

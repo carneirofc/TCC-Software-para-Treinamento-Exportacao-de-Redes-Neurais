@@ -340,7 +340,7 @@ public class Principal implements Initializable {
      * Carrega o conjunto de dados para teste
      */
     public void carregarDadosTeste(ActionEvent actionEvent) {
-        Utilidade.carregarDadosTeste();
+        Utilidade.carregarDadosTeste(actionEvent);
     }
 
     /**
@@ -348,10 +348,11 @@ public class Principal implements Initializable {
      */
     public void carregarConfig(ActionEvent actionEvent) {
         try {
-            File file = Janela.abrirArquivo("Arquivo de Propriedades de Configurações da RNA", Main.getMain().getStagePrincipal(), Recursos.EXTENSION_FILTER_JSON);
+            File file = Janela.abrirArquivo("Arquivo de Propriedades de Configurações da RNA", Main.getMain().getStagePrincipal(), Recursos.EXTENSION_FILTER_BIN);
             if (file == null)
                 return;
-            ConfigGeral.loadConfigGeral(file);
+            //ConfigGeral.loadConfigGeral(file);
+            ConfigGeral.deserializeConfigGerialDTO(file.getAbsolutePath());
             Notifications.create()
                     .darkStyle()
                     .position(Pos.TOP_RIGHT)
@@ -359,8 +360,8 @@ public class Principal implements Initializable {
                     .title("Operação concluída !")
                     .text("Arquivos de configuração carregados.")
                     .showInformation();
-        } catch (ExceptionPlanejada exceptionPlanejada) {
-            Utilidade.avisoExceptionPlanejada(exceptionPlanejada);
+       // } catch (ExceptionPlanejada exceptionPlanejada) {
+        //    Utilidade.avisoExceptionPlanejada(exceptionPlanejada);
         } catch (Exception e) {
             e.printStackTrace();
             Janela.exceptionDialog(e);
@@ -394,26 +395,11 @@ public class Principal implements Initializable {
     }
 
     public void exportarConfig(ActionEvent actionEvent) {
-        try {
-
-            File file = Janela.salvarArquivo("Exportar as Configurações Atuais do Sistema", Main.getMain().getStagePrincipal(), Recursos.EXTENSION_FILTER_JSON);
-            if (file == null) {
-                return;
-            }
-            new ExportaTexto().salvarConfigDadosJson(file);
-            Notifications.create()
-                    .darkStyle()
-                    .position(Pos.TOP_RIGHT)
-                    .hideAfter(Duration.seconds(4))
-                    .title("Operação concluída !")
-                    .text("\"A exportação das configurações fui concluída.")
-                    .showInformation();
-        } catch (ExceptionPlanejada exceptionPlanejada) {
-            Utilidade.avisoExceptionPlanejada(exceptionPlanejada);
-
-        } catch (Exception e) {
-            Janela.exceptionDialog(e);
+        File file = Janela.salvarArquivo("Exportar as Configurações Atuais do Sistema", Main.getMain().getStagePrincipal(), Recursos.EXTENSION_FILTER_BIN);
+        if (file == null) {
+            return;
         }
+        new ExportaTexto().salvarConfigDadosJson(file);
     }
 
 

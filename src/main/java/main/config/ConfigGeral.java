@@ -20,6 +20,40 @@ import java.io.*;
  */
 public class ConfigGeral {
 
+    public static void serializeConfigGeralDTO(String absPath) throws Exception {
+        // Serialization
+
+        // Saving of object in a file
+        FileOutputStream file = new FileOutputStream(absPath);
+        ObjectOutputStream out = new ObjectOutputStream(file);
+
+        // Method for serialization of object
+        out.writeObject(getConfigGeralAtual());
+
+        out.close();
+        file.close();
+
+        System.out.println("Object has been serialized");
+    }
+
+    public static void deserializeConfigGerialDTO(String absPath) throws Exception {
+
+
+        // Reading the object from a file
+        FileInputStream file = new FileInputStream(absPath);
+        ObjectInputStream in = new ObjectInputStream(file);
+
+        // Method for deserialization of object
+        ConfigGeralDTO object = (ConfigGeralDTO) in.readObject();
+
+        in.close();
+        file.close();
+        System.out.println("Object has been deserialized");
+        setConfigGeralAtual(object);
+
+
+    }
+
     private static ConfigGeralDTO configGeralAtual = null;
 
     /**

@@ -5,16 +5,14 @@
  */
 package main;
 
-import ann.funcao_ativacao.FuncaoTipo;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import main.config.ConfigGeral;
 import main.gui.ValoresDisplay;
 
 /**
  * Armazena os estados do sistema etc... Aqui ficam as variáveis de controle,
- * constantes utilizadas dentre outrasd configurações. Informações especificas a
+ * constantes utilizadas dentre outras configurações. Informações especificas a
  * respeito da rede neurão ficam na classe Configurações RNA
  *
  * @author Claudio

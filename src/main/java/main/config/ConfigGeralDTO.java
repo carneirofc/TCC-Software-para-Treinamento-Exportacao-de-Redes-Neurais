@@ -4,10 +4,11 @@ import ann.detalhes.Rna;
 import ann.funcao_ativacao.FuncaoTipo;
 import ann.geral.FuncaoDecaimento;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 // TODO: Implementar main.config Geral no BD.
-public class ConfigGeralDTO {
+public class ConfigGeralDTO implements Serializable {
 
 
     private FuncaoDecaimento funcaoDecaimento;

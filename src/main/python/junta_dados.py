@@ -6,6 +6,7 @@ try:
     if len(sys.argv) < 3:
         raise ValueError('Falta argumento...')
 
+
     if sys.argv[0] in str(sys.argv[-1]):
         raise ValueError('Altere o último arquivo')
 

@@ -38,7 +38,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Teste implements Initializable {
 
-    private static AtomicBoolean existe = new AtomicBoolean(false);
     public static final GraficoDispersao GRAFICO_DISPERSAO = new GraficoDispersao("Desempenho de Teste", "Erro Percentual");
 
 
@@ -88,17 +87,17 @@ public class Teste implements Initializable {
 
 
     @FXML
-    public void gerarDadosTreino() {
+    private void gerarDadosTreino() {
         //TODO: Implementar
-         try {
+        try {
             File file = Janela.salvarArquivo("Arquivo com dados de treinamento.", Main.getMain().getStagePrincipal(), Recursos.EXTENSION_FILTER_DADOS);
             if (file == null) {
                 return;
             }
-            double  errIni =  NumberFormat.getInstance().parse(erroInicial.getText().trim()).doubleValue();// Double.parseDouble(erroInicial.getText().trim());
-            double  errFim = NumberFormat.getInstance().parse(erroFinal.getText().trim()).doubleValue();
+            double errIni = NumberFormat.getInstance().parse(erroInicial.getText().trim()).doubleValue();
+            double errFim = NumberFormat.getInstance().parse(erroFinal.getText().trim()).doubleValue();
 
-            new ExportaTexto().geraDadosTeste(file,errIni,errFim);
+            new ExportaTexto().geraDadosTeste(file, errIni, errFim);
             Notifications.create()
                     .darkStyle()
                     .position(Pos.TOP_RIGHT)
@@ -106,7 +105,7 @@ public class Teste implements Initializable {
                     .title("Operação concluída !")
                     .text("\"A exportação do novo conjunto de teste concluída.")
                     .showInformation();
-        } catch (Exception e) {
+        } catch (ParseException e) {
             e.printStackTrace();
         }
     }
@@ -125,9 +124,9 @@ public class Teste implements Initializable {
 
         btnTestar.setOnAction(event -> testarRna());
         btnGerarConjTreino.setOnAction(event -> gerarDadosTreino());
-        btnCarregarDadosTeste.setOnAction(event -> Utilidade.carregarDadosTeste());
-        btnCarregarDadosTeste.setOnDragOver(event -> Utilidade.handleDragOver(event));
-        btnCarregarDadosTeste.setOnDragDropped(event -> Utilidade.dragDropDadosTeste(event));
+        btnCarregarDadosTeste.setOnAction(Utilidade::carregarDadosTeste);
+        btnCarregarDadosTeste.setOnDragOver(Utilidade::handleDragOver);
+        btnCarregarDadosTeste.setOnDragDropped(Utilidade::dragDropDadosTeste);
 
         erroMaximo.textProperty().bind(Bindings.format("%.5f %%", ValoresDisplay.obsTesteErroMaximo));
         erroMinimo.textProperty().bind(Bindings.format("%.5f %%", ValoresDisplay.obsTesteErroMinimo));
@@ -151,7 +150,7 @@ public class Teste implements Initializable {
             } else {
                 condition = true;
             }
-           // return ValidationResult.fromMessageIf(control, "Não é um percentual válido. Ex: 12.5% ou 1,000.00%", Severity.ERROR, condition);
+            // return ValidationResult.fromMessageIf(control, "Não é um percentual válido. Ex: 12.5% ou 1,000.00%", Severity.ERROR, condition);
             return ValidationResult.fromMessageIf(control, "Não é um valor válido.", Severity.ERROR, condition);
         };
         Validator<String> maiorQueMenor = (control, s) -> {

@@ -1,6 +1,7 @@
 package ann.detalhes;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -11,7 +12,7 @@ import java.util.Random;
  *
  * @author Claudio
  */
-public class Neuronio {
+public class Neuronio implements Serializable {
     /**
      * Usado no processo de dropout
      */

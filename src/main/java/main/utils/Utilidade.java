@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import data.txt.read.ManipuladorTxt;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableStringValue;
+import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Tooltip;
@@ -126,8 +127,8 @@ public class Utilidade {
         List<Integer> auxI = new ArrayList<>();
         if (line != null) {
             aux2 = getStringSeparadorEspaco(line).split(" ");
-            for (int i = 0; i < aux2.length; i++) {
-                auxI.add(Integer.parseInt(aux2[i]));
+            for (String anAux2 : aux2) {
+                auxI.add(Integer.parseInt(anAux2));
             }
         }
         return auxI;
@@ -166,7 +167,7 @@ public class Utilidade {
         return files;
     }
 
-    public static void carregarDadosTeste() {
+    public static void carregarDadosTeste(ActionEvent event) {
         try {
             List<File> file = Janela.abrirMultiplosArquivosGenerico("Arquivo de Texto Contendo o Conjunto de Teste", Main.getMain().getStagePrincipal(), Arrays.asList(Recursos.EXTENSION_FILTER_DADOS, Recursos.EXTENSION_FILTER_TXT, Recursos.EXTENSION_FILTER_CSV, Recursos.EXTENSION_FILTER_OUT));
             if (file == null) {

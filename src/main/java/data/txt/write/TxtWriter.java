@@ -43,12 +43,12 @@ public class TxtWriter {
      * @param extensao extensao do arquivo a ser salvo.
      * @param file     arquivo a ser salvo
      */
-    public boolean criaWriter(File file, FileChooser.ExtensionFilter extensao) throws Exception {
+    public void criaWriter(File file, FileChooser.ExtensionFilter extensao) throws Exception {
         if (file == null)
             throw new ExceptionPlanejada("Arquivo não existe.");
         fileWriter = new FileWriter(file.getCanonicalPath());
         printWriter = new PrintWriter(fileWriter);
-        return true;
+
     }
 
     /**

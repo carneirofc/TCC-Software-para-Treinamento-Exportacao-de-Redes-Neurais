@@ -67,6 +67,7 @@ public class Recursos {
         }
     }
 
+    public static final FileChooser.ExtensionFilter EXTENSION_FILTER_BIN = new FileChooser.ExtensionFilter("Arquivo .bin", "*.bin");
     public static final FileChooser.ExtensionFilter EXTENSION_FILTER_OUT = new FileChooser.ExtensionFilter("Arquivo .out", "*.out");
     public static final FileChooser.ExtensionFilter EXTENSION_FILTER_C = new FileChooser.ExtensionFilter("Código em C (*.c)", "*.c");
     public static final FileChooser.ExtensionFilter EXTENSION_FILTER_TXT = new FileChooser.ExtensionFilter("Arquivo de Texto (*.txt)", "*.txt");

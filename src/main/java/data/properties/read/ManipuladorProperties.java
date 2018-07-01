@@ -31,9 +31,17 @@ public class ManipuladorProperties {
     /**
      * Carrega os dados do arquivo para o programa.
      */
-    private static void configTrainData() {
-        ConjuntoDados.setColunasEntrada(Utilidade.getInt(Utilidade.getStringSeparadorEspaco(dataProperties.getProperty("in"))));
-        ConjuntoDados.setColunasSaida(Utilidade.getInt(Utilidade.getStringSeparadorEspaco(dataProperties.getProperty("out"))));
+    private static void configTrainData() throws Exception {
+        String in, out;
+        in = dataProperties.getProperty("in");
+        out = dataProperties.getProperty("out");
+        if (in == null || out == null || in.equals("") || out.equals(""))
+            throw new Exception("Erro ao carregar os dados do dataset.\n" +
+                    "Verifique se as colunas de entradas estão setadas na propriedade 'in'  e as colunas de saída na propriedade 'out'" +
+                    "Ex:\n\tin=0,1\n\tout=2");
+
+        ConjuntoDados.setColunasEntrada(Utilidade.getInt(Utilidade.getStringSeparadorEspaco(in)));
+        ConjuntoDados.setColunasSaida(Utilidade.getInt(Utilidade.getStringSeparadorEspaco(out)));
 
         Topologia.configuraTolopogia();
     }

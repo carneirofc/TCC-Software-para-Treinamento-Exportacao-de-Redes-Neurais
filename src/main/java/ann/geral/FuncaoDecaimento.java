@@ -1,6 +1,8 @@
 package ann.geral;
 
-public enum FuncaoDecaimento {
+import java.io.Serializable;
+
+public enum FuncaoDecaimento implements Serializable {
     NENHUM("Sem Decaimento",
             (taxa, taxaOriginal, taxaMinima, epocaAtual, passo, ganho) -> taxaOriginal),
     DEGRAU("Percentual por n épocas: taxa *= ganho",
@@ -24,6 +26,7 @@ public enum FuncaoDecaimento {
                 }
                 return (taxa > taxaMinima) ? taxa : taxaMinima;
             }),
+
     GANHO_PROPORCIONAL("Porporcional: taxa/(1 + ganho * taxaOriginal)",
             (taxa, taxaOriginal, taxaMinima, epocaAtual, passo, ganho) -> {
                 if (passo == 0 || (1 + ganho * taxaOriginal) == 0) {

@@ -10,6 +10,7 @@ import main.Recursos;
 import main.config.ConfigGeral;
 import main.utils.ExceptionPlanejada;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.List;
  *
  * @author Claudio
  */
-public class Rna {
+public class Rna implements Serializable {
 
 
     /**

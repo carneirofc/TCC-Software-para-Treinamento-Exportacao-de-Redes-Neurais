@@ -8,7 +8,6 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import vo.UsuarioEntity;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 public class SessionUtil {
