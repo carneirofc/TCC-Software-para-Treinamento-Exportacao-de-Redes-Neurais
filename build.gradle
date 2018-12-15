@@ -20,18 +20,10 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile fileTree(dir: 'lib/', include: ['*.jar'])
+
     compile group: 'org.jetbrains', name: 'annotations', version: '15.0'
     compile 'com.google.code.gson:gson:2.8.2'
-    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.12.Final'
     compile group: 'org.controlsfx', name: 'controlsfx', version: '9.0.0'
-
-    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.45'
-
-    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
-    compile group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.3.0'
-    compile group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.0'
-    compile group: 'javax.activation', name: 'com.springsource.javax.activation', version: '1.1.0'
-    compile group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
 
     //   compile 'com.jfoenix:jfoenix:1.9.0'
 }
@@ -57,4 +49,4 @@ distributions {
             }
         }
     }
-} 
+}

@@ -243,7 +243,7 @@ public class Principal implements Initializable {
      * Testa   o conjunto de dados de teste carregado
      */
     public void iniciarTeste(ActionEvent actionEvent) {
-        Main.getMain().adicionarPopUp(Recursos.FXML_TESTE, "Painel de Testes", true, false, Recursos.ICONE_JAVAFX);
+        Main.getMain().adicionarPopUp(Recursos.FXML_TESTE, "Painel de Testes");
     }
 
 
