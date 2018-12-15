@@ -1,4 +1,6 @@
 # Software para Treinamento e Exportação de Redes Neurais Artificiais Arquitetura Perceptron Multicamadas<b>
+
+<b>Testado com jdk-9.0.4</b><br>
 Software parte do trabalho de conclusão de curso do curso de Engenharia de Controle e Automação, CEFET-MG<br>
 "Sistema de Controle Sensorless de um Motor de Indução Utlizando Estimador Neural"<p>
 
